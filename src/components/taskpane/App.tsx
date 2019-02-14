@@ -78,7 +78,7 @@ export default class App extends React.Component<AppProps, AppState> {
         return (
             <div className='ms-welcome'>
                 <Header logo='assets/logo-filled.png' title={this.props.title} message='Welcome' />
-                <HeroList message='Discover what reactExcel can do for you today!' items={this.state.listItems}>
+                <HeroList message='Discover what Office Add-ins can do for you today!' items={this.state.listItems}>
                     <p className='ms-font-l'>Modify the source files, then click <b>Run</b>.</p>
                     <Button className='ms-welcome__action' buttonType={ButtonType.hero} iconProps={{ iconName: 'ChevronRight' }} onClick={this.click}>Run</Button>
                 </HeroList>
