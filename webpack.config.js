@@ -1,9 +1,9 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const fs = require("fs");
-const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const fs = require("fs");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require('webpack');
 
 module.exports = (env, options) => {
   const dev = options.mode === "development";
@@ -20,7 +20,7 @@ module.exports = (env, options) => {
         'react-hot-loader/patch',
         './src/index.tsx',
     ],
-    ribbon: './src/components/ribbon/Ribbon.tsx'
+    ribbon: './src/ribbon/ribbon.ts'
     },
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"]
@@ -59,12 +59,12 @@ module.exports = (env, options) => {
       new ExtractTextPlugin('[name].[hash].css'),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
-          template: './src/components/taskpane/taskpane.html',
+          template: './src/taskpane/taskpane.html',
           chunks: ['taskpane', 'vendor', 'polyfills']
       }),
       new HtmlWebpackPlugin({
           filename: "ribbon.html",
-          template: "./src/components/ribbon/ribbon.html",
+          template: "./src/ribbon/ribbon.html",
           chunks: ["ribbon"]
         }),
       new CopyWebpackPlugin([
