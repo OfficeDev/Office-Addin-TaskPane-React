@@ -18,7 +18,7 @@ module.exports = (env, options) => {
     ],
     taskpane: [
         'react-hot-loader/patch',
-        './src/index.tsx',
+        './src/taskpane/index.tsx',
     ],
     ribbon: './src/ribbon/ribbon.ts'
     },
