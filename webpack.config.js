@@ -1,16 +1,26 @@
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const fs = require("fs");
-const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require('webpack');
 
 module.exports = (env, options) => {
   const dev = options.mode === "development";
   const config = {
     devtool: "source-map",
     entry: {
-      taskpane: "./src/taskpane/taskpane.ts",
-      ribbon: "./src/ribbon/ribbon.ts"
+      vendor: [
+        'react',
+        'react-dom',
+        'core-js',
+        'office-ui-fabric-react'
+    ],
+    taskpane: [
+        'react-hot-loader/patch',
+        './src/taskpane/index.tsx',
+    ],
+    ribbon: './src/ribbon/ribbon.ts'
     },
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"]
@@ -19,32 +29,51 @@ module.exports = (env, options) => {
       rules: [
         {
           test: /\.tsx?$/,
-          exclude: /node_modules/,
-          use: "ts-loader"
+          use: [
+              'react-hot-loader/webpack',
+              'ts-loader'
+          ],
+          exclude: /node_modules/
         },
         {
-          test: /\.html$/,
-          exclude: /node_modules/,
-          use: "html-loader"
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader']
         },
         {
-          test: /\.(png|jpg|jpeg|gif)$/,
-          use: "file-loader"
-        }
-      ]
-    },
+          test: /\.less$/,
+          use: ['style-loader', 'css-loader', 'less-loader']
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+          use: {
+              loader: 'file-loader',
+              query: {
+                  name: 'assets/[name].[ext]'
+                }
+              }  
+            }   
+          ]
+    },    
     plugins: [
       new CleanWebpackPlugin(dev ? [] : ["dist"]),
+      new ExtractTextPlugin('[name].[hash].css'),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
-        template: "./src/taskpane/taskpane.html",
-        chunks: ["taskpane"]
+          template: './src/taskpane/taskpane.html',
+          chunks: ['taskpane', 'vendor', 'polyfills']
       }),
       new HtmlWebpackPlugin({
-        filename: "ribbon.html",
-        template: "./src/ribbon/ribbon.html",
-        chunks: ["ribbon"]
-      }),
+          filename: "ribbon.html",
+          template: "./src/ribbon/ribbon.html",
+          chunks: ["ribbon"]
+        }),
+      new CopyWebpackPlugin([
+          {
+              from: './assets',
+              ignore: ['*.scss'],
+              to: 'assets',
+          }
+      ]),
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"]
       })
