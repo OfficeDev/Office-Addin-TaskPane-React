@@ -4,8 +4,6 @@ import Header from './Header';
 import HeroList, { HeroListItem } from './HeroList';
 import Progress from './Progress';
 
-import * as OfficeHelpers from '@microsoft/office-js-helpers';
-
 export interface AppProps {
     title: string;
     isOfficeInitialized: boolean;
@@ -104,8 +102,7 @@ export default class App extends React.Component<AppProps, AppState> {
             console.log(`The range address was ${range.address}.`);
           });
         } catch (error) {
-          OfficeHelpers.UI.notify(error);
-          OfficeHelpers.Utilities.log(error);
+          console.log(error);
         }
       }
       
