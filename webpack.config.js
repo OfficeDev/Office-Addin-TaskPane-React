@@ -51,7 +51,7 @@ module.exports = async (env, options)  => {
           ]
     },    
     plugins: [
-      new CleanWebpackPlugin(dev ? [] : ["dist"]),
+      new CleanWebpackPlugin(),
       new CopyWebpackPlugin([
         {
           to: "taskpane.css",
@@ -68,7 +68,7 @@ module.exports = async (env, options)  => {
           filename: "commands.html",
           template: "./src/commands/commands.html",
           chunks: ["commands"]
-        }),
+      }),
       new CopyWebpackPlugin([
           {
               from: './assets',
