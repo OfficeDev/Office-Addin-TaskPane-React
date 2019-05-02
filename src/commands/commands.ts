@@ -3,7 +3,7 @@
  * See LICENSE in the project root for license information.
  */
 
-Office.onReady(info => {
+Office.onReady(() => {
   // If needed, Office.js is ready to be called
 });
 
