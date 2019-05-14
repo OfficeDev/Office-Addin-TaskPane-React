@@ -1,5 +1,5 @@
 const fs = require("fs");
-const host = process.argv[2].toUpperCase();
+const host = process.argv[2];
 const hosts = ["excel", "onenote", "outlook", "powerpoint", "project", "word"];
 const util = require("util");
 const readFileAsync = util.promisify(fs.readFile);
@@ -23,13 +23,14 @@ async function convertProjectToSingleHost(host) {
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // copy host-specific App.tsx over src/taskpane/app/components/App.tsx
-  const srcContent = await readFileAsync(`./src/taskpane/components/${host.charAt(0).toUpperCase()}.App.tsx`, 'utf8');
+  host = host.charAt(0).toUpperCase() + host.slice(1);
+  const srcContent = await readFileAsync(`./src/taskpane/components/${host}.App.tsx`, 'utf8');
   await writeFileAsync(`./src/taskpane/components/App.tsx`, srcContent);
 
   // delete all host specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/components/${host.charAt(0).toUpperCase()}.App.tsx`);
+    await unlinkFileAsync(`./src/taskpane/components/${host}.App.tsx`);
   });
 
   // delete this script
@@ -51,9 +52,9 @@ async function updatePackageJsonForSingleHost(host) {
   });
 
   // remove scripts that are unrelated to the selected host
-  Object.keys(content.scripts).forEach(function(key) {
-    if (key.startsWith("sideload:") 
-      || key.startsWith("unload:") 
+  Object.keys(content.scripts).forEach(function (key) {
+    if (key.startsWith("sideload:")
+      || key.startsWith("unload:")
       || key === "convert-to-single-host"
     ) {
       delete content.scripts[key];
