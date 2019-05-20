@@ -18,11 +18,12 @@ async function modifyProjectForSingleHost(host) {
 }
 
 async function convertProjectToSingleHost(host) {
-  // copy host-specific manifest over manifest.xml
+  // copy host-specific manifest over manifest.xml  
   const manifestContent = await readFileAsync(`./manifest.${host}.xml`, "utf8");
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // copy host-specific App.tsx over src/taskpane/app/components/App.tsx
+  host = getCamelizedHostName(host);
   const srcContent = await readFileAsync(`./src/taskpane/components/${host}.App.tsx`, 'utf8');
   await writeFileAsync(`./src/taskpane/components/App.tsx`, srcContent);
 
@@ -64,6 +65,24 @@ async function updatePackageJsonForSingleHost(host) {
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
+function getCamelizedHostName(host) {
+  switch(host) {
+    case "excel":
+      return "Excel";
+    case "onenote":
+      return "OneNote";
+    case "outlook":
+      return "Outlook"
+    case "powerpoint":
+      return "PowerPoint";    
+    case "project":
+      return "Project";
+    case "word":
+      return "Word";
+    default:
+      throw new Error(`'${host}' is not a supported host.`);
+  }
+}
 
 /**
  * Modify the project so that it only supports a single host.
