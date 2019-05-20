@@ -23,7 +23,7 @@ async function convertProjectToSingleHost(host) {
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // copy host-specific App.tsx over src/taskpane/app/components/App.tsx
-  host = getCamelizedHostName(host);
+  host = getHostName(host);
   const srcContent = await readFileAsync(`./src/taskpane/components/${host}.App.tsx`, 'utf8');
   await writeFileAsync(`./src/taskpane/components/App.tsx`, srcContent);
 
@@ -65,7 +65,7 @@ async function updatePackageJsonForSingleHost(host) {
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
-function getCamelizedHostName(host) {
+function getHostName(host) {
   switch(host) {
     case "excel":
       return "Excel";
