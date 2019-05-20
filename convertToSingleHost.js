@@ -23,14 +23,14 @@ async function convertProjectToSingleHost(host) {
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // copy host-specific App.tsx over src/taskpane/app/components/App.tsx
-  host = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/components/${host}.App.tsx`, 'utf8');
+  const hostName = getHostName(host);
+  const srcContent = await readFileAsync(`./src/taskpane/components/${hostName}.App.tsx`, 'utf8');
   await writeFileAsync(`./src/taskpane/components/App.tsx`, srcContent);
 
   // delete all host specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/components/${host}.App.tsx`);
+    await unlinkFileAsync(`./src/taskpane/components/${hostName}.App.tsx`);
   });
 
   // delete this script
