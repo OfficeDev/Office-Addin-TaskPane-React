@@ -23,7 +23,6 @@ async function convertProjectToSingleHost(host) {
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // copy host-specific App.tsx over src/taskpane/app/components/App.tsx
-  host = host.charAt(0).toUpperCase() + host.slice(1);
   const srcContent = await readFileAsync(`./src/taskpane/components/${host}.App.tsx`, 'utf8');
   await writeFileAsync(`./src/taskpane/components/App.tsx`, srcContent);
 
