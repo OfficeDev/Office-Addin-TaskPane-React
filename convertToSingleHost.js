@@ -111,6 +111,7 @@ async function updatePackageJsonForSingleHost(host) {
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
+function getHostName(host) {
   switch(host) {
     case "excel":
       return "Excel";
