@@ -76,14 +76,14 @@ export async function sleep(ms: number): Promise<any> {
 
 async function getProcessId(processName: string): Promise<number> {
     return new Promise<number>(async function (resolve, reject) {
-        cps.get(function (processes: any) {
+        cps.get(function (err: Error, processes: any) {
             try {
                 const processArray = processes.filter(function (p: any) {
                     return (p.name.indexOf(processName) > 0);
                 });
                 resolve(processArray.length > 0 ? processArray[0].pid : undefined);
             }
-            catch (err) {
+            catch {
                 reject(err);
             }
         });

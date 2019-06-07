@@ -1,4 +1,5 @@
 import * as assert from "assert";
+// @ts-ignore
 import * as mocha from "mocha";
 import { AppType, startDebugging, stopDebugging } from "office-addin-debugging";
 import * as officeAddinTestHelpers from "office-addin-test-helpers";
@@ -35,7 +36,7 @@ hosts.forEach(function (host) {
                 assert.equal(testValues.length > 0, true);
             });
             it("Validate expected result name", async function () {
-                assert.equal(testValues[0].resultName, host === "excel" ? "fill-color" : "output-message");
+                assert.equal(testValues[0].resultName, host.toLowerCase() === "excel" ? "fill-color" : "output-message");
             });
             it("Validate expected result", async function () {
                 assert.equal(testValues[0].resultValue, testValues[0].expectedValue);
