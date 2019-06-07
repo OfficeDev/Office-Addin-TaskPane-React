@@ -111,6 +111,15 @@ async function updatePackageJsonForSingleHost(host) {
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
+async function updateLaunchJsonFile() {
+  // remove 'Debug Tests' configuration from launch.json
+  const launchJson = `.vscode/launch.json`;
+  const launchJsonContent = await readFileAsync(launchJson, "utf8");
+  const regex = /"configurations": \[\r?\n(.*{(.*\r?\n)*?.*"name": "Debug Tests",\r?\n(.*\r?\n)*?.*},)/gm;
+  const updatedContent = launchJsonContent.replace(regex, `"configurations": [`);
+  await writeFileAsync(launchJson, updatedContent);
+}
+
 function getHostName(host) {
   switch(host) {
     case "excel":
