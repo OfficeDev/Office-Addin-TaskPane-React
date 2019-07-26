@@ -54,7 +54,7 @@ async function convertProjectToSingleHost(host) {
     });
   }
   else {
-    deleteFolder(path.resolve(`${process.cwd()}/test`));
+    deleteFolder(path.resolve(`./test`));
   }
 
   // delete all host specific files
@@ -62,6 +62,9 @@ async function convertProjectToSingleHost(host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
     await unlinkFileAsync(`./src/taskpane/components/${getHostName(host)}.App.tsx`);
   });
+
+  // delete the .github folder
+  deleteFolder(path.resolve(`./.github`));
 
   // delete this script
   await unlinkFileAsync("./convertToSingleHost.js");
