@@ -33,12 +33,21 @@
     "react-dom": "^16.8.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
+<<<<<<< HEAD
+    "@babel/core": "^7.5.4",
     "@types/es6-collections": "^0.5.29",
+    "@types/es6-promise": "^3.3.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.3",
+    "@types/office-js": "^1.0.19",
+=======
+    "@babel/core": "^7.5.5",
+    "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.5.5",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.2",
     "@types/office-js": "^1.0.30",
+>>>>>>> Office-Addin-Taskpane/master
     "@types/office-runtime": "^1.0.8",
     "@types/react": "^16.8.22",
     "@types/react-dom": "^16.8.4",
@@ -47,30 +56,50 @@
     "@types/webpack-dev-server": "^3.1.6",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.0.4",
+<<<<<<< HEAD
+    "copy-webpack-plugin": "^5.0.3",
     "css-loader": "^3.0.0",
     "current-processes": "^0.2.1",
     "extract-text-webpack-plugin": "4.0.0-beta.0",
-    "file-loader": "^4.2.0",
+    "file-loader": "^4.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
+    "mocha": "^6.1.4",
+    "office-addin-debugging": "^2.4.2",
+    "office-addin-dev-certs": "^1.3.2",
+    "office-addin-test-helpers": "^1.0.1",
+    "office-addin-test-server": "^1.0.2",
+    "office-toolbox": "^0.2.1",
+    "postcss-loader": "3.0.0",
+    "react-hot-loader": "^4.12.6",
+=======
+    "copy-webpack-plugin": "^5.0.4",
+    "current-processes": "^0.2.1",
+    "file-loader": "^4.2.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
     "mocha": "^6.2.0",
     "office-addin-debugging": "^3.0.10",
     "office-addin-dev-certs": "^1.4.7",
     "office-addin-manifest": "^1.4.9",
     "office-addin-test-helpers": "^1.0.11",
     "office-addin-test-server": "^1.0.13",
-    "postcss-loader": "3.0.0",
-    "react-hot-loader": "^4.12.6",
+>>>>>>> Office-Addin-Taskpane/master
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
+<<<<<<< HEAD
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+=======
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0"
+>>>>>>> Office-Addin-Taskpane/master
   }
 }
