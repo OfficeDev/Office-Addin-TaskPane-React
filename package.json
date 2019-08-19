@@ -57,6 +57,7 @@
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "mocha": "^6.2.0",
+    "office-addin-cli": "0.2.9",
     "office-addin-debugging": "^3.0.10",
     "office-addin-dev-certs": "^1.4.7",
     "office-addin-manifest": "^1.4.9",
