@@ -62,9 +62,13 @@
     "office-addin-dev-certs": "^1.4.8",
     "office-addin-manifest": "^1.4.10",
     "office-addin-test-helpers": "^1.0.11",
-    "office-addin-test-server": "^1.0.14",
+<<<<<<< HEAD
+    "office-addin-test-server": "^1.0.13",
     "postcss-loader": "3.0.0",
     "react-hot-loader": "^4.12.6",
+=======
+    "office-addin-test-server": "^1.0.14",
+>>>>>>> Office-Addin-Taskpane/master
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.0.4",
