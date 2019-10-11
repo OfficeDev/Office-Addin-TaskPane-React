@@ -3,7 +3,7 @@ import { Button, ButtonType } from "office-ui-fabric-react";
 import Header from "./Header";
 import HeroList, { HeroListItem } from "./HeroList";
 import Progress from "./Progress";
-/* global Button, console, Excel, Header, HeroList, HeroListItem, Progress */
+/* global Button, console, Header, HeroList, HeroListItem, Office, Progress */
 
 export interface AppProps {
   title: string;

@@ -1,8 +1,10 @@
 {
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint"
-  ], 
+    "react",
+    "@typescript-eslint",
+    "office-addins"
+  ],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
@@ -10,8 +12,13 @@
       "jsx": true
     },
     "project": "./tsconfig.json"
-    },
+  },
   "extends": [
-    "eslint-config-office-addins"
-  ]
+    "plugin:office-addins/react"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
 }
