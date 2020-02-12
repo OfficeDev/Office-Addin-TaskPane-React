@@ -27,9 +27,6 @@ Office.initialize = () => {
   render(App);
 };
 
-/* Initial render showing a progress bar */
-render(App);
-
 if ((module as any).hot) {
   (module as any).hot.accept("./components/App", () => {
     const NextApp = require("./components/App").default;
