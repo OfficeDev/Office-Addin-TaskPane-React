@@ -81,6 +81,7 @@ module.exports = async (env, options)  => {
       })
     ],
     devServer: {
+      hot: true,
       headers: {
         "Access-Control-Allow-Origin": "*"
       },      
