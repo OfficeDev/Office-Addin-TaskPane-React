@@ -5,8 +5,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require('webpack');
 
+const urlDev="https://localhost:3000/";
+const urlProd="https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+
 module.exports = async (env, options)  => {
   const dev = options.mode === "development";
+  const buildType = dev ? "dev" : "prod";
   const config = {
     devtool: "source-map",
     entry: {
@@ -40,24 +44,34 @@ module.exports = async (env, options)  => {
           use: ['style-loader', 'css-loader']
         },
         {
-          test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-          use: {
-              loader: 'file-loader',
-              query: {
-                  name: 'assets/[name].[ext]'
-                }
-              }  
-            }   
-          ]
+          test: /\.(png|jpg|jpeg|gif)$/,
+          loader: "file-loader",
+          options: {
+            name: '[path][name].[ext]',          
+          }
+        }
+      ]
     },    
     plugins: [
       new CleanWebpackPlugin(),
-      new CopyWebpackPlugin([
+      new CopyWebpackPlugin({
+        patterns: [
         {
           to: "taskpane.css",
           from: "./src/taskpane/taskpane.css"
+        },
+        {
+          to: "[name]." + buildType + ".[ext]",
+          from: "manifest*.xml",
+          transform(content) {
+            if (dev) {
+              return content;
+            } else {
+              return content.toString().replace(new RegExp(urlDev, "g"), urlProd);
+            }
+          }
         }
-      ]),
+      ]}),
       new ExtractTextPlugin('[name].[hash].css'),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
@@ -69,13 +83,6 @@ module.exports = async (env, options)  => {
           template: "./src/commands/commands.html",
           chunks: ["commands"]
       }),
-      new CopyWebpackPlugin([
-          {
-              from: './assets',
-              ignore: ['*.scss'],
-              to: 'assets',
-          }
-      ]),
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"]
       })

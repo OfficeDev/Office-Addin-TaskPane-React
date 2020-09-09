@@ -3,6 +3,10 @@ import { Button, ButtonType } from "office-ui-fabric-react";
 import Header from "./Header";
 import HeroList, { HeroListItem } from "./HeroList";
 import Progress from "./Progress";
+// images references in the manifest
+import "../../../assets/icon-16.png";
+import "../../../assets/icon-32.png";
+import "../../../assets/icon-80.png";
 /* global Button, console, Excel, Header, HeroList, HeroListItem, Progress */
 
 export interface AppProps {

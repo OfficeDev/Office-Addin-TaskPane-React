@@ -57,25 +57,23 @@ module.exports = async (env, options) => {
         },
         plugins: [
             new CleanWebpackPlugin(),
-            new CopyWebpackPlugin([
+            new CopyWebpackPlugin({
+                patterns: [
                 {
                     to: "taskpane.css",
                     from: path.resolve(__dirname, './../src/taskpane/taskpane.css')
+                },
+                {
+                    from: './assets',
+                    to: 'assets',
                 }
-            ]),
+                ]}),
             new ExtractTextPlugin('[name].[hash].css'),
             new HtmlWebpackPlugin({
                 filename: "taskpane.html",
                 template: path.resolve(__dirname, './src/test-taskpane.html'),
                 chunks: ['taskpane', 'vendor', 'polyfills']
             }),
-            new CopyWebpackPlugin([
-                {
-                    from: './assets',
-                    ignore: ['*.scss'],
-                    to: 'assets',
-                }
-            ]),
             new webpack.ProvidePlugin({
                 Promise: ["es6-promise", "Promise"]
             })
