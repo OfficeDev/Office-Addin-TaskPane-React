@@ -3,11 +3,11 @@ import { Button, ButtonType } from 'office-ui-fabric-react';
 import Header from '../../src/taskpane/components/Header';
 import HeroList, { HeroListItem } from '../../src/taskpane/components/HeroList';
 import Progress from '../../src/taskpane/components/Progress';
-import * as excel from "./test.excel.app";
-import * as powerpoint from "./test.powerpoint.app";
-import * as word from "./test.word.app";
-import { pingTestServer} from "office-addin-test-helpers";
+import * as powerpoint from "../../src/taskpane/components/PowerPoint.App";
+import { pingTestServer, sendTestResults } from "office-addin-test-helpers";
+import * as testHelpers from "./test-helpers";
 const port: number = 4201;
+let testValues: any = [];
 
 export interface AppProps {
     title: string;
@@ -24,22 +24,10 @@ export default class App extends React.Component<AppProps, AppState> {
         this.state = {
             listItems: []
         };
-        Office.onReady(async (info) => {
-            if (info.host === Office.HostType.Excel || info.host === Office.HostType.PowerPoint || info.host === Office.HostType.Word) {
-                const testServerResponse: object = await pingTestServer(port);
-                if (testServerResponse["status"] == 200) {
-                    switch(info.host) {
-                        case Office.HostType.Excel:
-                            const excelApp = new excel.default(this.props, this.context);
-                            return excelApp.runTest();
-                        case Office.HostType.PowerPoint:
-                            const powerpointApp = new powerpoint.default(this.props, this.context);
-                            return powerpointApp.runTest();
-                        case Office.HostType.Word:
-                            const wordApp = new word.default(this.props, this.context);
-                            return wordApp.runTest();
-                    }
-                }
+        Office.onReady(async () => {
+            const testServerResponse: object = await pingTestServer(port);
+            if (testServerResponse["status"] == 200) {
+                this.runTest();
             }
         });
     }
@@ -62,7 +50,41 @@ export default class App extends React.Component<AppProps, AppState> {
             ]
         });
     }
-    click = async () => { 
+
+    async runTest(): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                // Execute taskpane code
+                const powerpointApp = new powerpoint.default(this.props, this.context);
+                await powerpointApp.click();
+                await testHelpers.sleep(2000);
+
+                // Get output of executed taskpane code
+                PowerPoint.run(async () => {
+                    // get selected text
+                    const selectedText = await this.getSelectedText();
+                    // send test results
+                    testHelpers.addTestResult(testValues, "output-message", selectedText, " Hello World!");
+                    await sendTestResults(testValues, port);;
+                    testValues.pop();
+                    resolve();
+                });
+            } catch {
+                reject();
+            }
+        });
+    }
+
+    async getSelectedText(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            Office.context.document.getSelectedDataAsync(Office.CoercionType.Text, (result: Office.AsyncResult<string>) => {
+                if (result.status === Office.AsyncResultStatus.Failed) {
+                    reject(result.error);
+                } else {
+                    resolve(result.value);
+                }
+            });
+        })    
     }
 
     render() {
@@ -86,7 +108,7 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Header logo='assets/logo-filled.png' title={this.props.title} message='Welcome' />
                 <HeroList message='Discover what Office Add-ins can do for you today!' items={this.state.listItems}>
                     <p className='ms-font-l'>Modify the source files, then click <b>Run</b>.</p>
-                    <Button className='ms-welcome__action' buttonType={ButtonType.hero} iconProps={{ iconName: 'ChevronRight' }} onClick={this.click}>Run</Button>
+                    <Button className='ms-welcome__action' buttonType={ButtonType.hero} iconProps={{ iconName: 'ChevronRight' }} >Run</Button>
                 </HeroList>
             </div>
         );
