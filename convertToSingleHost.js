@@ -79,6 +79,9 @@ async function updatePackageJsonForSingleHost(host) {
   // update 'config' section in package.json to use selected host
   content.config["app-to-debug"] = host;
 
+  // remove 'engines' section
+  delete content.engines;
+
   // update sideload and unload scripts to use selected host.
   ["sideload", "unload"].forEach(key => {
     content.scripts[key] = content.scripts[`${key}:${host}`];
@@ -89,6 +92,7 @@ async function updatePackageJsonForSingleHost(host) {
     if (key.startsWith("sideload:")
       || key.startsWith("unload:")
       || key === "convert-to-single-host"
+      || key === "start:desktop:outlook"
     ) {
       delete content.scripts[key];
     }
@@ -169,7 +173,9 @@ async function deleteSupportFiles()
     await unlinkFileAsync("LICENSE");
     await unlinkFileAsync("README.md");
     await unlinkFileAsync("./convertToSingleHost.js");
+    await unlinkFileAsync(".npmrc");
 }
+
 /**
  * Modify the project so that it only supports a single host.
  * @param host The host to support.

@@ -14,6 +14,7 @@ module.exports = async (env, options)  => {
   const config = {
     devtool: "source-map",
     entry: {
+      polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: [
         'react',
         'react-dom',
