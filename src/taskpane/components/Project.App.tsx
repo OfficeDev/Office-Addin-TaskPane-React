@@ -22,7 +22,7 @@ export default class App extends React.Component<AppProps, AppState> {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      listItems: []
+      listItems: [],
     };
   }
 
@@ -31,24 +31,24 @@ export default class App extends React.Component<AppProps, AppState> {
       listItems: [
         {
           icon: "Ribbon",
-          primaryText: "Achieve more with Office integration"
+          primaryText: "Achieve more with Office integration",
         },
         {
           icon: "Unlock",
-          primaryText: "Unlock features and functionality"
+          primaryText: "Unlock features and functionality",
         },
         {
           icon: "Design",
-          primaryText: "Create and visualize like a pro"
-        }
-      ]
+          primaryText: "Create and visualize like a pro",
+        },
+      ],
     });
   }
 
   click = async () => {
     try {
       // Get the GUID of the selected task
-      Office.context.document.getSelectedTaskAsync(result => {
+      Office.context.document.getSelectedTaskAsync((result) => {
         let taskGuid;
         if (result.status === Office.AsyncResultStatus.Succeeded) {
           taskGuid = result.value;
@@ -59,7 +59,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
           // Set the field value. If the call is successful, set the next field.
           for (let index = 0; index < targetFields.length; index++) {
-            Office.context.document.setTaskFieldAsync(taskGuid, targetFields[index], fieldValues[index], result => {
+            Office.context.document.setTaskFieldAsync(taskGuid, targetFields[index], fieldValues[index], (result) => {
               if (result.status === Office.AsyncResultStatus.Succeeded) {
                 index++;
               } else {
