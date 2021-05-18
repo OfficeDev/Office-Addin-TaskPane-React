@@ -4,7 +4,7 @@ import { AppContainer } from "react-hot-loader";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-/* global AppContainer, Component, document, Office, module, require */
+/* global document, Office, module, require */
 
 initializeIcons();
 

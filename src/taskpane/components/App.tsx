@@ -9,7 +9,7 @@ import * as outlook from "./Outlook.App";
 import * as powerpoint from "./PowerPoint.App";
 import * as project from "./Project.App";
 import * as word from "./Word.App";
-/* global Button, Header, HeroList, HeroListItem, Office */
+/* global Office */
 
 export interface AppProps {
   title: string;
