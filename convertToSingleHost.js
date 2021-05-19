@@ -77,7 +77,7 @@ async function updatePackageJsonForSingleHost(host) {
   let content = JSON.parse(data);
 
   // update 'config' section in package.json to use selected host
-  content.config["app-to-debug"] = host;
+  content.config["app_to_debug"] = host;
 
   // remove 'engines' section
   delete content.engines;
@@ -169,7 +169,6 @@ function deleteFolder(folder) {
 async function deleteSupportFiles()
 {
     await unlinkFileAsync("CONTRIBUTING.md");
-    await unlinkFileAsync(".gitignore");
     await unlinkFileAsync("LICENSE");
     await unlinkFileAsync("README.md");
     await unlinkFileAsync("./convertToSingleHost.js");

@@ -7,7 +7,7 @@ import Progress from "./Progress";
 import "../../../assets/icon-16.png";
 import "../../../assets/icon-32.png";
 import "../../../assets/icon-80.png";
-/* global Button, console, Excel, Header, HeroList, HeroListItem, Progress */
+/* global console, Excel  */
 
 export interface AppProps {
   title: string;

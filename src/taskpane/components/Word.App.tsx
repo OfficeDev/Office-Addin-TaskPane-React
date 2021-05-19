@@ -7,7 +7,7 @@ import Progress from "./Progress";
 import "../../../assets/icon-16.png";
 import "../../../assets/icon-32.png";
 import "../../../assets/icon-80.png";
-/* global Button Header, HeroList, HeroListItem, Progress, Word */
+/* global Word */
 
 export interface AppProps {
   title: string;
