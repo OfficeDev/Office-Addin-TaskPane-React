@@ -1,7 +1,6 @@
-import 'office-ui-fabric-react/dist/css/fabric.min.css';
 import App from './test.app'
 import { AppContainer } from 'react-hot-loader';
-import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
+import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 

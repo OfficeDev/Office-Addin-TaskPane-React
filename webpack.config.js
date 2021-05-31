@@ -19,7 +19,7 @@ module.exports = async (env, options)  => {
         'react',
         'react-dom',
         'core-js',
-        'office-ui-fabric-react'
+        '@fluentui/react'
     ],
     taskpane: [
         'react-hot-loader/patch',
