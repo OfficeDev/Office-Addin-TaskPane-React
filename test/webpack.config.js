@@ -24,7 +24,6 @@ module.exports = async (env, options) => {
     },
     output: {
       path: path.resolve(__dirname, "testBuild"),
-      sourceMapFilename: "[name].js.map",
       devtoolModuleFilenameTemplate: "webpack:///[resource-path]?[loaders]",
     },
     resolve: {
@@ -53,11 +52,18 @@ module.exports = async (env, options) => {
         },
         {
           test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-          type: "asset/resource",
+          loader: "file-loader",
+          options: {
+            name: "[path][name].[ext]",
+          },
         },
       ],
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        Promise: ["es6-promise", "Promise"],
+        process: "process/browser",
+      }),
       new CleanWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
@@ -76,9 +82,6 @@ module.exports = async (env, options) => {
         filename: "taskpane.html",
         template: path.resolve(__dirname, "./src/test-taskpane.html"),
         chunks: ["taskpane", "vendor", "polyfills"],
-      }),
-      new webpack.ProvidePlugin({
-        Promise: ["es6-promise", "Promise"],
       }),
     ],
     devServer: {

@@ -27,7 +27,6 @@ module.exports = async (env, options) => {
       commands: "./src/commands/commands.ts",
     },
     output: {
-      sourceMapFilename: "[name].js.map",
       devtoolModuleFilenameTemplate: "webpack:///[resource-path]?[loaders]",
     },
     resolve: {
@@ -51,7 +50,10 @@ module.exports = async (env, options) => {
         },
         {
           test: /\.(png|jpg|jpeg|gif|ico)$/,
-          type: "asset/resource",
+          loader: "file-loader",
+          options: {
+            name: "[path][name].[ext]",
+          },
         },
       ],
     },
