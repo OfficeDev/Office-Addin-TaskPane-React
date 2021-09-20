@@ -3,10 +3,15 @@
 const devCerts = require("office-addin-dev-certs");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractCSSPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
+
+async function getHttpsOptions() {
+  const httpsOptions = await devCerts.getHttpsServerOptions();
+  return { cacert: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
+}
 
 module.exports = async (env, options) => {
   // const dev = options.mode === "development";
@@ -19,13 +24,15 @@ module.exports = async (env, options) => {
     },
     output: {
       path: path.resolve(__dirname, "testBuild"),
+      devtoolModuleFilenameTemplate: "webpack:///[resource-path]?[loaders]",
     },
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"],
-    },
-    node: {
-      child_process: "empty",
-      fs: "empty",
+      fallback: {
+        child_process: false,
+        fs: false,
+        os: require.resolve("os-browserify/browser"),
+      },
     },
     module: {
       rules: [
@@ -35,21 +42,28 @@ module.exports = async (env, options) => {
           exclude: /node_modules/,
         },
         {
+          test: /\.html$/,
+          exclude: /node_modules/,
+          use: "html-loader",
+        },
+        {
           test: /\.css$/,
-          use: ["style-loader", "css-loader"],
+          use: [ExtractCSSPlugin.loader, "css-loader"],
         },
         {
           test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-          use: {
-            loader: "file-loader",
-            query: {
-              name: "assets/[name].[ext]",
-            },
+          loader: "file-loader",
+          options: {
+            name: "[path][name].[ext]",
           },
         },
       ],
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        Promise: ["es6-promise", "Promise"],
+        process: "process/browser",
+      }),
       new CleanWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
@@ -63,22 +77,21 @@ module.exports = async (env, options) => {
           },
         ],
       }),
-      new ExtractTextPlugin("[name].[hash].css"),
+      new ExtractCSSPlugin({ filename: "[name].[hash].css" }),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: path.resolve(__dirname, "./src/test-taskpane.html"),
         chunks: ["taskpane", "vendor", "polyfills"],
       }),
-      new webpack.ProvidePlugin({
-        Promise: ["es6-promise", "Promise"],
-      }),
     ],
     devServer: {
-      contentBase: path.join(__dirname, "testBuild"),
+      static: {
+        directory: path.join(__dirname, "testBuild"),
+      },
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-      https: options.https !== undefined ? options.https : await devCerts.getHttpsServerOptions(),
+      https: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
       port: process.env.npm_package_config_dev_server_port || 3000,
     },
   };
