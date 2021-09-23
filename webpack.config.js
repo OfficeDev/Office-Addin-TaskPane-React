@@ -1,9 +1,7 @@
 /* eslint-disable no-undef */
 
 const devCerts = require("office-addin-dev-certs");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ExtractCSSPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
@@ -28,6 +26,7 @@ module.exports = async (env, options) => {
     },
     output: {
       devtoolModuleFilenameTemplate: "webpack:///[resource-path]?[loaders]",
+      clean: true,
     },
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"],
@@ -45,26 +44,14 @@ module.exports = async (env, options) => {
           use: "html-loader",
         },
         {
-          test: /\.css$/,
-          use: [dev ? "style-loader" : ExtractCSSPlugin.loader, "css-loader"],
-        },
-        {
           test: /\.(png|jpg|jpeg|gif|ico)$/,
-          loader: "file-loader",
-          options: {
-            name: "[path][name].[ext]",
-          },
+          type: "asset/resource",
         },
       ],
     },
     plugins: [
-      new CleanWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
-          {
-            from: "./src/taskpane/taskpane.css",
-            to: "taskpane.css",
-          },
           {
             from: "manifest*.xml",
             to: "[name]." + buildType + "[ext]",
@@ -91,7 +78,7 @@ module.exports = async (env, options) => {
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
-    ].concat(dev ? [] : [new ExtractCSSPlugin({ filename: "[name].[hash].css" })]),
+    ],
     devServer: {
       hot: true,
       headers: {
