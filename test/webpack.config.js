@@ -47,6 +47,9 @@ module.exports = async (env, options) => {
         {
           test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
           type: "asset/resource",
+          generator: {
+            filename: "assets/[name][ext][query]",
+          },
         },
       ],
     },
