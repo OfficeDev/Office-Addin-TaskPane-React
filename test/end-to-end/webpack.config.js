@@ -35,6 +35,16 @@ module.exports = async (env, options) => {
     module: {
       rules: [
         {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-typescript"],
+            },
+          },
+        },
+        {
           test: /\.tsx?$/,
           use: ["react-hot-loader/webpack", "ts-loader"],
           exclude: /node_modules/,

@@ -12,7 +12,6 @@
     "allowUnusedLabels": false,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
-    "noUnusedLocals": true,
     "lib": [
       "es7",
       "dom"
@@ -26,5 +25,8 @@
     "node_modules"
   ],
   "compileOnSave": false,
-  "buildOnSave": false
+  "buildOnSave": false,
+  "ts-node": { 
+    "files": true 
+  }
 }

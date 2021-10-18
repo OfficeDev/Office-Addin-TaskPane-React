@@ -1,13 +1,13 @@
 import * as React from "react";
 import { DefaultButton } from "@fluentui/react";
-import Header from "../../src/taskpane/components/Header";
-import HeroList, { HeroListItem } from "../../src/taskpane/components/HeroList";
-import Progress from "../../src/taskpane/components/Progress";
-import * as powerpoint from "../../src/taskpane/components/PowerPoint.App";
+import Header from "../../../src/taskpane/components/Header";
+import HeroList, { HeroListItem } from "../../../src/taskpane/components/HeroList";
+import Progress from "../../../src/taskpane/components/Progress";
+import * as word from "../../../src/taskpane/components/word.App";
 import { pingTestServer, sendTestResults } from "office-addin-test-helpers";
 import * as testHelpers from "./test-helpers";
 
-/* global Office, PowerPoint, require */
+/* global Office, Word, require */
 const port: number = 4201;
 let testValues: any = [];
 
@@ -54,39 +54,27 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   async runTest(): Promise<void> {
-    return new Promise<void>(async (resolve, reject) => {
-      try {
-        // Execute taskpane code
-        const powerpointApp = new powerpoint.default(this.props, this.context);
-        await powerpointApp.click();
+    try {
+      // Execute taskpane code
+      const wordApp = new word.default(this.props, this.context);
+      await wordApp.click();
+      await testHelpers.sleep(2000);
+
+      // Get output of executed taskpane code
+      Word.run(async (context) => {
+        var firstParagraph = context.document.body.paragraphs.getFirst();
+        firstParagraph.load("text");
+        await context.sync();
         await testHelpers.sleep(2000);
 
-        // Get output of executed taskpane code
-        PowerPoint.run(async () => {
-          // get selected text
-          const selectedText = await this.getSelectedText();
-          // send test results
-          testHelpers.addTestResult(testValues, "output-message", selectedText, " Hello World!");
-          await sendTestResults(testValues, port);
-          testValues.pop();
-          resolve();
-        });
-      } catch {
-        reject();
-      }
-    });
-  }
-
-  async getSelectedText(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      Office.context.document.getSelectedDataAsync(Office.CoercionType.Text, (result: Office.AsyncResult<string>) => {
-        if (result.status === Office.AsyncResultStatus.Failed) {
-          reject(result.error);
-        } else {
-          resolve(result.value);
-        }
+        testHelpers.addTestResult(testValues, "output-message", firstParagraph.text, "Hello World");
+        await sendTestResults(testValues, port);
+        testValues.pop();
+        Promise.resolve();
       });
-    });
+    } catch {
+      Promise.reject();
+    }
   }
 
   render() {
@@ -96,7 +84,7 @@ export default class App extends React.Component<AppProps, AppState> {
       return (
         <Progress
           title={title}
-          logo={require("./../../assets/logo-filled.png")}
+          logo={require("./../../../assets/logo-filled.png")}
           message="Please sideload your addin to see app body."
         />
       );
@@ -104,7 +92,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     return (
       <div className="ms-welcome">
-        <Header logo={require("./../../assets/logo-filled.png")} title={this.props.title} message="Welcome" />
+        <Header logo={require("./../../../assets/logo-filled.png")} title={this.props.title} message="Welcome" />
         <HeroList message="Discover what Office Add-ins can do for you today!" items={this.state.listItems}>
           <p className="ms-font-l">
             Modify the source files, then click <b>Run</b>.
