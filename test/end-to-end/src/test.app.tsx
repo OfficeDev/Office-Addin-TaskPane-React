@@ -1,8 +1,8 @@
 import * as React from "react";
 import { DefaultButton } from "@fluentui/react";
-import Header from "../../src/taskpane/components/Header";
-import HeroList, { HeroListItem } from "../../src/taskpane/components/HeroList";
-import Progress from "../../src/taskpane/components/Progress";
+import Header from "../../../src/taskpane/components/Header";
+import HeroList, { HeroListItem } from "../../../src/taskpane/components/HeroList";
+import Progress from "../../../src/taskpane/components/Progress";
 import * as excel from "./test.excel.app";
 import * as powerpoint from "./test.powerpoint.app";
 import * as word from "./test.word.app";
@@ -80,7 +80,7 @@ export default class App extends React.Component<AppProps, AppState> {
       return (
         <Progress
           title={title}
-          logo={require("./../../assets/logo-filled.png")}
+          logo={require("./../../../assets/logo-filled.png")}
           message="Please sideload your addin to see app body."
         />
       );
@@ -88,7 +88,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     return (
       <div className="ms-welcome">
-        <Header logo={require("./../../assets/logo-filled.png")} title={this.props.title} message="Welcome" />
+        <Header logo={require("./../../../assets/logo-filled.png")} title={this.props.title} message="Welcome" />
         <HeroList message="Discover what Office Add-ins can do for you today!" items={this.state.listItems}>
           <p className="ms-font-l">
             Modify the source files, then click <b>Run</b>.

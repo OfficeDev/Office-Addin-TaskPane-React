@@ -11,6 +11,7 @@ const testPackages = [
   "@types/node",
   "current-processes",
   "mocha",
+  "office-addin-mock",
   "office-addin-test-helpers",
   "office-addin-test-server",
   "ts-node",
@@ -48,8 +49,8 @@ async function convertProjectToSingleHost(host) {
     // copy over host-specific taskpane test code to test-taskpane.ts
     const testTaskpaneContent = await readFileAsync(`./test/src/test.${host}.app.tsx`, "utf8");
     const updatedTestTaskpaneContent = testTaskpaneContent.replace(
-      `../../src/taskpane/components/${host}.App`, 
-      `../../src/taskpane/components/App`
+      `../../../src/taskpane/components/${host}.App`, 
+      `../../../src/taskpane/components/App`
     );
     await writeFileAsync(`./test/src/test.app.tsx`, updatedTestTaskpaneContent);
 
@@ -76,6 +77,9 @@ async function convertProjectToSingleHost(host) {
 
   // delete the .github folder
   deleteFolder(path.resolve(`./.github`));
+
+  // delete CI/CD pipeline files
+  deleteFolder(path.resolve(`./.azure-devops`));
 
   // delete repo support files
   await deleteSupportFiles();

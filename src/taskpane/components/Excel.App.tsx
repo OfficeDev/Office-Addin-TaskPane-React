@@ -3,10 +3,15 @@ import { DefaultButton } from "@fluentui/react";
 import Header from "./Header";
 import HeroList, { HeroListItem } from "./HeroList";
 import Progress from "./Progress";
+
 // images references in the manifest
-import "../../../assets/icon-16.png";
-import "../../../assets/icon-32.png";
-import "../../../assets/icon-80.png";
+/* eslint-disable no-unused-vars */
+import icon16 from "../../../assets/icon-16.png";
+import icon32 from "../../../assets/icon-32.png";
+import icon64 from "../../../assets/icon-64.png";
+import icon80 from "../../../assets/icon-80.png";
+import icon128 from "../../../assets/icon-128.png";
+/* eslint-enable no-unused-vars */
 
 /* global console, Excel, require  */
 
