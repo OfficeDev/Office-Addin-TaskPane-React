@@ -2,6 +2,7 @@
 
 const devCerts = require("office-addin-dev-certs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
 
@@ -72,6 +73,14 @@ module.exports = async (env, options) => {
         filename: "taskpane.html",
         template: path.resolve(__dirname, "./src/test-taskpane.html"),
         chunks: ["taskpane", "vendor", "polyfills"],
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: "assets/icon-*",
+            to: "assets/[name][ext][query]",
+          },
+        ],
       }),
     ],
     devServer: {
