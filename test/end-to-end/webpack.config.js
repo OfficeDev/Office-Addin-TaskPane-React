@@ -77,7 +77,7 @@ module.exports = async (env, options) => {
       new CopyWebpackPlugin({
         patterns: [
           {
-            from: "assets/icon-*",
+            from: "assets/*",
             to: "assets/[name][ext][query]",
           },
         ],
