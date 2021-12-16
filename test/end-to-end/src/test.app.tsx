@@ -1,10 +1,15 @@
 import * as React from "react";
 import { DefaultButton } from "@fluentui/react";
-import Header from "./Header";
-import HeroList, { HeroListItem } from "./HeroList";
-import Progress from "./Progress";
+import Header from "../../../src/taskpane/components/Header";
+import HeroList, { HeroListItem } from "../../../src/taskpane/components/HeroList";
+import Progress from "../../../src/taskpane/components/Progress";
+import * as excel from "./test.excel.app";
+import * as powerpoint from "./test.powerpoint.app";
+import * as word from "./test.word.app";
+import { pingTestServer } from "office-addin-test-helpers";
 
-/* global require */
+/* global Office, require */
+const port: number = 4201;
 
 export interface AppProps {
   title: string;
@@ -21,6 +26,31 @@ export default class App extends React.Component<AppProps, AppState> {
     this.state = {
       listItems: [],
     };
+    Office.onReady(async (info) => {
+      if (
+        info.host === Office.HostType.Excel ||
+        info.host === Office.HostType.PowerPoint ||
+        info.host === Office.HostType.Word
+      ) {
+        const testServerResponse: object = await pingTestServer(port);
+        if (testServerResponse["status"] == 200) {
+          switch (info.host) {
+            case Office.HostType.Excel: {
+              const excelApp = new excel.default(this.props, this.context);
+              return excelApp.runTest();
+            }
+            case Office.HostType.PowerPoint: {
+              const powerpointApp = new powerpoint.default(this.props, this.context);
+              return powerpointApp.runTest();
+            }
+            case Office.HostType.Word: {
+              const wordApp = new word.default(this.props, this.context);
+              return wordApp.runTest();
+            }
+          }
+        }
+      }
+    });
   }
 
   componentDidMount() {
@@ -41,12 +71,7 @@ export default class App extends React.Component<AppProps, AppState> {
       ],
     });
   }
-
-  click = async () => {
-    /**
-     * Insert your Outlook code here
-     */
-  };
+  click = async () => {};
 
   render() {
     const { title, isOfficeInitialized } = this.props;

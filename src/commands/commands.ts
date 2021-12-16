@@ -18,7 +18,7 @@ function action(event: Office.AddinCommands.Event) {
     type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
     message: "Performed action.",
     icon: "Icon.80x80",
-    persistent: true
+    persistent: true,
   };
 
   // Show a notification message
@@ -40,5 +40,5 @@ function getGlobal() {
 
 const g = getGlobal() as any;
 
-// the add-in command functions need to be available in global scope
+// The add-in command functions need to be available in global scope
 g.action = action;

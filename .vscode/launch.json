@@ -5,9 +5,9 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug UI Tests",
       "type": "node",
       "request": "launch",
-      "name": "Debug Tests",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [
         "-u",
@@ -15,10 +15,31 @@
         "--timeout",
         "999999",
         "--colors",
-        "${workspaceFolder}/test",
+        "${workspaceFolder}/test/end-to-end",
         "-r",
         "ts-node/register",
-        "${workspaceFolder}/test/*.ts"
+        "${workspaceFolder}/test/end-to-end/*.ts"
+      ],
+      "internalConsoleOptions": "openOnSessionStart",
+      "runtimeArgs": [
+        "--preserve-symlinks"
+      ]
+    },
+    {
+      "name": "Debug Unit Tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "-u",
+        "bdd",
+        "--timeout",
+        "999999",
+        "--colors",
+        "${workspaceFolder}/test/unit",
+        "-r",
+        "ts-node/register",
+        "${workspaceFolder}/test/unit/*.test.ts"
       ],
       "internalConsoleOptions": "openOnSessionStart",
       "runtimeArgs": [
@@ -45,6 +66,28 @@
       "timeout": 600000,
       "webRoot": "${workspaceRoot}",
       "preLaunchTask": "Debug: Excel Desktop",
+      "postDebugTask": "Stop Debug"
+    },
+    {
+      "name": "Outlook Desktop (Edge Chromium)",
+      "type": "edge",
+      "request": "attach",
+      "useWebView": "advanced",
+      "port": 9229,
+      "timeout": 600000,
+      "webRoot": "${workspaceRoot}",
+      "preLaunchTask": "Debug: Outlook Desktop",
+      "postDebugTask": "Stop Debug"
+    },
+    {
+      "name": "Outlook Desktop (Edge Legacy)",
+      "type": "office-addin",
+      "request": "attach",
+      "url": "https://localhost:3000/taskpane.html?_host_Info=Outlook$Win32$16.01$en-US$$$$0",
+      "port": 9222,
+      "timeout": 600000,
+      "webRoot": "${workspaceRoot}",
+      "preLaunchTask": "Debug: Outlook Desktop",
       "postDebugTask": "Stop Debug"
     },
     {
@@ -95,10 +138,6 @@
       "name": "Office Online (Chrome)",
       "type": "chrome",
       "request": "launch",
-      // To debug your Add-in:
-      // 1. When prompted, enter the url (share link) to an Office Online document.
-      // 2. Sideload your Add-in. https://docs.microsoft.com/en-us/office/dev/add-ins/testing/sideload-office-add-ins-for-testing
-      "url": "${input:officeOnlineDocumentUrl}",
       "webRoot": "${workspaceFolder}",
       "preLaunchTask": "Debug: Web"
     },
@@ -107,19 +146,8 @@
       "type": "pwa-msedge",
       "request": "launch",
       "port": 9222,
-      // To debug your Add-in:
-      // 1. When prompted, enter the url (share link) to an Office Online document.
-      // 2. Sideload your Add-in. https://docs.microsoft.com/en-us/office/dev/add-ins/testing/sideload-office-add-ins-for-testing
-      "url": "${input:officeOnlineDocumentUrl}",
       "webRoot": "${workspaceFolder}",
       "preLaunchTask": "Debug: Web"
-    }
-  ],
-  "inputs": [
-    {
-      "id": "officeOnlineDocumentUrl",
-      "type": "promptString",
-      "description": "Please enter the url for the Office Online document."
     }
   ]
 }

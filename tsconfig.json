@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "esModuleInterop": true,
     "module": "commonjs",
     "jsx": "react",
     "moduleResolution": "node",
@@ -12,7 +13,6 @@
     "allowUnusedLabels": false,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
-    "noUnusedLocals": true,
     "lib": [
       "es7",
       "dom"
@@ -26,5 +26,8 @@
     "node_modules"
   ],
   "compileOnSave": false,
-  "buildOnSave": false
+  "buildOnSave": false,
+  "ts-node": { 
+    "files": true 
+  }
 }
