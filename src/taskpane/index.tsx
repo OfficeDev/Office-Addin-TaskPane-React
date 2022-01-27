@@ -25,10 +25,10 @@ const render = (Component) => {
 };
 
 /* Render application after Office initializes */
-Office.initialize = () => {
+Office.onReady(() => {
   isOfficeInitialized = true;
   render(App);
-};
+});
 
 if ((module as any).hot) {
   (module as any).hot.accept("./components/App", () => {
