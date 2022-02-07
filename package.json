@@ -35,11 +35,11 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@fluentui/react": "^8.34.0",
+    "@fluentui/react": "^8.52.3",
     "core-js": "^3.9.1",
     "es6-promise": "^4.2.8",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.7"
   },
   "devDependencies": {
@@ -49,9 +49,9 @@
     "@types/node": "^14.14.22",
     "@types/office-js": "^1.0.180",
     "@types/office-runtime": "^1.0.17",
-    "@types/react": "^16.8.22",
-    "@types/react-dom": "^16.8.4",
-    "@types/react-hot-loader": "^4.1.0",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-hot-loader": "^4.1.1",
     "@types/webpack": "^4.4.34",
     "@types/webpack-dev-server": "^4.1.0",
     "acorn": "^8.5.0",
@@ -59,7 +59,7 @@
     "copy-webpack-plugin": "^9.0.1",
     "eslint": "^7.20.0",
     "eslint-plugin-office-addins": "^2.0.0",
-    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react": "^7.28.0",
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.2",
