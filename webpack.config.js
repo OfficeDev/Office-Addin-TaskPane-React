@@ -4,6 +4,7 @@ const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const urlDev = "https://localhost:3000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
@@ -12,7 +13,6 @@ async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
   return { cacert: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
 }
-
 module.exports = async (env, options) => {
   const dev = options.mode === "development";
   const config = {
@@ -20,7 +20,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx"],
+      taskpane: "./src/taskpane/index.tsx",
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -33,19 +33,16 @@ module.exports = async (env, options) => {
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-typescript"],
+          use: [
+            {
+              loader: require.resolve("babel-loader"),
+              options: {
+                plugins: [dev && require.resolve("react-refresh/babel")].filter(Boolean),
+              },
             },
-          },
-        },
-        {
-          test: /\.tsx?$/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
-          exclude: /node_modules/,
+          ],
         },
         {
           test: /\.html$/,
@@ -94,7 +91,10 @@ module.exports = async (env, options) => {
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
-    ],
+    ].concat(dev ? [new ReactRefreshWebpackPlugin()] : []),
+    optimization: {
+      runtimeChunk: "single",
+    },
     devServer: {
       hot: true,
       headers: {
