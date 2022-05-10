@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DefaultButton } from "@fluentui/react";
+import { DefaultButton } from "@fluentui/react/lib/Button";
 import Header from "./Header";
 import HeroList, { HeroListItem } from "./HeroList";
 import Progress from "./Progress";

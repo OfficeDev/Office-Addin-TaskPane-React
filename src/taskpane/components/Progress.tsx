@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Spinner, SpinnerSize } from "@fluentui/react";
+import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 
 export interface ProgressProps {
   logo: string;
