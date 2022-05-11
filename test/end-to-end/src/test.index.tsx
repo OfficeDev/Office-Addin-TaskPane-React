@@ -1,7 +1,7 @@
 import App from "./test.app";
 import { AppContainer } from "react-hot-loader";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
-import * as React from "react";
+import React from "react";
 import * as ReactDOM from "react-dom";
 /* global document, Office, module, require */
 

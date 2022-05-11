@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import Header from "../../../src/taskpane/components/Header";
 import HeroList, { HeroListItem } from "../../../src/taskpane/components/HeroList";

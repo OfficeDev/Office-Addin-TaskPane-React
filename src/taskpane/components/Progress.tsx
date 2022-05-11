@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 
 export interface ProgressProps {
