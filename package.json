@@ -57,7 +57,7 @@
     "acorn": "^8.5.0",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
-    "eslint": "^7.20.0",
+    "eslint": "^7.28.0",
     "eslint-plugin-office-addins": "^2.0.0",
     "eslint-plugin-react": "^7.28.0",
     "file-loader": "^6.2.0",
