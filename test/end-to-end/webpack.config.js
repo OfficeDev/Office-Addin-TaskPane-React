@@ -18,7 +18,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", path.resolve(__dirname, "./src/test.index.tsx")],
+      taskpane: path.resolve(__dirname, "./src/test.index.tsx"),
     },
     output: {
       path: path.resolve(__dirname, "testBuild"),
@@ -36,19 +36,13 @@ module.exports = async (env, options) => {
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-typescript"],
+          use: [
+            {
+              loader: require.resolve("babel-loader"),
             },
-          },
-        },
-        {
-          test: /\.tsx?$/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
-          exclude: /node_modules/,
+          ],
         },
         {
           test: /\.html$/,

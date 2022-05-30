@@ -1,9 +1,8 @@
 import App from "./test.app";
-import { AppContainer } from "react-hot-loader";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-/* global document, Office, module, require */
+/* global document, Office */
 
 initializeIcons();
 
@@ -13,9 +12,7 @@ const title = "Contoso Task Pane Add-in";
 
 const render = (Component) => {
   ReactDOM.render(
-    <AppContainer>
-      <Component title={title} isOfficeInitialized={isOfficeInitialized} />
-    </AppContainer>,
+    <Component title={title} isOfficeInitialized={isOfficeInitialized} />,
     document.getElementById("container")
   );
 };
@@ -28,10 +25,3 @@ Office.initialize = () => {
 
 /* Initial render showing a progress bar */
 render(App);
-
-if ((module as any).hot) {
-  (module as any).hot.accept("./test.app", () => {
-    const NextApp = require("./test.app").default;
-    render(NextApp);
-  });
-}
