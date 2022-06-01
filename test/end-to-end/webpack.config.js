@@ -56,7 +56,7 @@ module.exports = async (env, options) => {
           use: "html-loader",
         },
         {
-          test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+          test: /\.(png|jpg|jpeg|gif|ico)$/,
           type: "asset/resource",
           generator: {
             filename: "assets/[name][ext][query]",
