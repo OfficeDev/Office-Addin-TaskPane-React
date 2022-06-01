@@ -21,10 +21,10 @@ const render = (Component) => {
 };
 
 /* Render application after Office initializes */
-Office.initialize = () => {
+Office.onReady(() => {
   isOfficeInitialized = true;
   render(App);
-};
+});
 
 /* Initial render showing a progress bar */
 render(App);

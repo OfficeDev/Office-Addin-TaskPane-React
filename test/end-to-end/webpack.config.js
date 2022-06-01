@@ -17,8 +17,12 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", path.resolve(__dirname, "./src/test.index.tsx")],
+      react: ["react", "react-dom"],
+      fluent: { import: ["@fluentui/react", "@fluentui/font-icons-mdl2"], dependOn: "react" },
+      taskpane: {
+        import: ["react-hot-loader/patch", path.resolve(__dirname, "./src/test.index.tsx")],
+        dependOn: "fluent",
+      },
     },
     output: {
       path: path.resolve(__dirname, "testBuild"),
@@ -72,7 +76,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: path.resolve(__dirname, "./src/test-taskpane.html"),
-        chunks: ["taskpane", "vendor", "polyfills"],
+        chunks: ["taskpane", "fluent", "react", "polyfill"],
       }),
       new CopyWebpackPlugin({
         patterns: [

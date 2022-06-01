@@ -4,7 +4,6 @@ const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
-const { polyfill } = require("es6-promise");
 
 const urlDev = "https://localhost:3000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
@@ -21,8 +20,8 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       react: ["react", "react-dom"],
-      vendor: { import: ["@fluentui/react", "@fluentui/font-icons-mdl2"], dependOn: 'react' },
-      taskpane: { import: ["./src/taskpane/index.tsx"], dependOn: 'vendor' },
+      fluent: { import: ["@fluentui/react", "@fluentui/font-icons-mdl2"], dependOn: "react" },
+      taskpane: { import: ["react-hot-loader/patch", "./src/taskpane/index.tsx"], dependOn: "fluent" },
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -86,7 +85,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
-        chunks: ["taskpane", "vendor", "react", "polyfill"],
+        chunks: ["taskpane", "fluent", "react", "polyfill"],
       }),
       new HtmlWebpackPlugin({
         filename: "commands.html",
