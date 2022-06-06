@@ -69,7 +69,7 @@ async function convertProjectToSingleHost(host) {
     deleteFolder(path.resolve(`./test`));
   }
 
-  // delete all host specific files
+  // delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
     await unlinkFileAsync(`./src/taskpane/components/${getHostName(host)}.App.tsx`);
