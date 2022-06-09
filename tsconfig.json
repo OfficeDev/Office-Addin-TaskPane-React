@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "jsx": "react",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "removeComments": false,
-    "outDir": "dist",
     "allowUnusedLabels": false,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "noImplicitReturns": true,
     "noUnusedParameters": true,
+    "outDir": "dist",
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5",
     "lib": [
       "es7",
       "dom"
