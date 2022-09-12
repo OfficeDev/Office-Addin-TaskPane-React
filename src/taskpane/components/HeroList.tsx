@@ -1,4 +1,5 @@
 import * as React from "react";
+//import PropTypes from "prop-types";
 
 export interface HeroListItem {
   icon: string;
@@ -8,6 +9,7 @@ export interface HeroListItem {
 export interface HeroListProps {
   message: string;
   items: HeroListItem[];
+  children: any;
 }
 
 export default class HeroList extends React.Component<HeroListProps> {
