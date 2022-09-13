@@ -8,6 +8,7 @@ export interface HeroListItem {
 export interface HeroListProps {
   message: string;
   items: HeroListItem[];
+  children: any;
 }
 
 export default class HeroList extends React.Component<HeroListProps> {
