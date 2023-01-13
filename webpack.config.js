@@ -20,7 +20,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx"],
+      taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -43,8 +43,8 @@ module.exports = async (env, options) => {
         },
         {
           test: /\.tsx?$/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
           exclude: /node_modules/,
+          use: ["react-hot-loader/webpack", "ts-loader"],
         },
         {
           test: /\.html$/,
