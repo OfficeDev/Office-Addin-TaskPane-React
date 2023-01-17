@@ -18,7 +18,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", path.resolve(__dirname, "./src/test.index.tsx")],
+      taskpane: ["react-hot-loader/patch", path.resolve(__dirname, "./src/test.index.tsx"), path.resolve(__dirname, "./src/test-taskpane.html")],
     },
     output: {
       path: path.resolve(__dirname, "testBuild"),
