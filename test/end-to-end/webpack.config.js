@@ -18,7 +18,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", path.resolve(__dirname, "./src/test.index.tsx"), path.resolve(__dirname, "./src/test-taskpane.html")],
+      taskpane: [path.resolve(__dirname, "./src/test.index.tsx"), path.resolve(__dirname, "./src/test-taskpane.html")],
     },
     output: {
       path: path.resolve(__dirname, "testBuild"),
@@ -46,7 +46,7 @@ module.exports = async (env, options) => {
         },
         {
           test: /\.tsx?$/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
+          use: ["ts-loader"],
           exclude: /node_modules/,
         },
         {

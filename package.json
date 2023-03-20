@@ -38,8 +38,8 @@
     "@fluentui/react": "^8.52.3",
     "core-js": "^3.9.1",
     "es6-promise": "^4.2.8",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.13.7"
   },
   "devDependencies": {
@@ -49,9 +49,8 @@
     "@types/node": "^14.14.22",
     "@types/office-js": "^1.0.256",
     "@types/office-runtime": "^1.0.23",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.11",
-    "@types/react-hot-loader": "^4.1.1",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
     "@types/webpack": "^4.4.34",
     "@types/webpack-dev-server": "^4.1.0",
     "acorn": "^8.5.0",
