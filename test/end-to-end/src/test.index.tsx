@@ -25,3 +25,10 @@ Office.initialize = () => {
 
 /* Initial render showing a progress bar */
 render(App);
+
+if ((module as any).hot) {
+  (module as any).hot.accept("./test.app", () => {
+    const NextApp = require("./test.app").default;
+    render(NextApp);
+  });
+}
