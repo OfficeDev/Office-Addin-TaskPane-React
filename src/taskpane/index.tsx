@@ -2,7 +2,7 @@ import App from "./components/App";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import { ThemeProvider } from "@fluentui/react";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 /* global document, Office, module, require */
 
@@ -12,12 +12,13 @@ let isOfficeInitialized = false;
 
 const title = "Contoso Task Pane Add-in";
 
+const container = document.getElementById("container");
+const root = createRoot(container);
 const render = (Component) => {
-  ReactDOM.render(
+  root.render(
     <ThemeProvider>
       <Component title={title} isOfficeInitialized={isOfficeInitialized} />
-    </ThemeProvider>,
-    document.getElementById("container")
+    </ThemeProvider>
   );
 };
 
