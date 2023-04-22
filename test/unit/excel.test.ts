@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import * as excel from "../../src/taskpane/components/excel.App";
+import * as excel from "../../src/taskpane/components/Excel.App";
 
 /* global describe, global, it */
 
@@ -25,7 +25,7 @@ const ExcelMockData = {
 };
 
 const OfficeMockData = {
-  onReady: async function () {},
+  onReady: async function () { },
 };
 
 describe("Excel", function () {

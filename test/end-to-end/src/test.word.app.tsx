@@ -3,7 +3,7 @@ import { DefaultButton } from "@fluentui/react";
 import Header from "../../../src/taskpane/components/Header";
 import HeroList, { HeroListItem } from "../../../src/taskpane/components/HeroList";
 import Progress from "../../../src/taskpane/components/Progress";
-import * as word from "../../../src/taskpane/components/word.App";
+import * as word from "../../../src/taskpane/components/Word.App";
 import { pingTestServer, sendTestResults } from "office-addin-test-helpers";
 import * as testHelpers from "./test-helpers";
 

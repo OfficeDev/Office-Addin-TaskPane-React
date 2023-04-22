@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import * as word from "../../src/taskpane/components/word.App";
+import * as word from "../../src/taskpane/components/Word.App";
 
 /* global describe, global, it, Word */
 
@@ -30,7 +30,7 @@ const WordMockData = {
 };
 
 const OfficeMockData = {
-  onReady: async function () {},
+  onReady: async function () { },
 };
 
 describe("Word", function () {
