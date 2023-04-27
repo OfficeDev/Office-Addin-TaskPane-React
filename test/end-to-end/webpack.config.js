@@ -17,7 +17,7 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
+      vendor: ["react", "react-dom", "@fluentui/react"],
       taskpane: [path.resolve(__dirname, "./src/test.index.tsx"), path.resolve(__dirname, "./src/test-taskpane.html")],
     },
     output: {
@@ -71,7 +71,8 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: path.resolve(__dirname, "./src/test-taskpane.html"),
-        chunks: ["taskpane", "vendor", "polyfills"],
+        chunksSortMode: "manual",
+        chunks: ["polyfill", "vendor", "taskpane"],
       }),
       new CopyWebpackPlugin({
         patterns: [
