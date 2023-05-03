@@ -36,7 +36,7 @@ module.exports = async (env, options) => {
       rules: [
         {
           test: /\.ts$/,
-          exclude: /node_modules/,
+          exclude: /node_modules\/(?!(@fluentui\/.+))/, // Transpile @fluentui packages because of incompatibility with IE11
           use: {
             loader: "babel-loader",
             options: {
