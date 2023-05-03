@@ -83,7 +83,6 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
-        chunksSortMode: "manual",
         chunks: ["polyfill", "vendor", "taskpane"],
       }),
       new HtmlWebpackPlugin({
