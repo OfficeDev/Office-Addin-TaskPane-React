@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Image, tokens, makeStyles } from "@fluentui/react-components";
 
 export interface HeaderProps {
   title: string;
@@ -6,15 +7,32 @@ export interface HeaderProps {
   message: string;
 }
 
-export default class Header extends React.Component<HeaderProps> {
-  render() {
-    const { title, logo, message } = this.props;
+const useStyles = makeStyles({
+  welcome__header: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingBottom: "30px",
+    paddingTop: "100px",
+    backgroundColor: tokens.colorNeutralBackground3,
+  },
+  message: {
+    fontSize: tokens.fontSizeHero900,
+    fontWeight: tokens.fontWeightRegular,
+    fontColor: tokens.colorNeutralBackgroundStatic,
+  },
+});
 
-    return (
-      <section className="ms-welcome__header ms-bgColor-neutralLighter ms-u-fadeIn500">
-        <img width="90" height="90" src={logo} alt={title} title={title} />
-        <h1 className="ms-fontSize-su ms-fontWeight-light ms-fontColor-neutralPrimary">{message}</h1>
-      </section>
-    );
-  }
-}
+const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
+  const { title, logo, message } = props;
+  const styles = useStyles();
+
+  return (
+    <section className={styles.welcome__header}>
+      <Image width="90" height="90" src={logo} alt={title} />
+      <h1 className={styles.message}>{message}</h1>
+    </section>
+  );
+};
+
+export default Header;

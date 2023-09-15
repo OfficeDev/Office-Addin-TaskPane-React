@@ -19,9 +19,8 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
-      commands: "./src/commands/commands.ts",
+      vendor: ["react", "react-dom", "core-js", "@fluentui/react-components", "@fluentui/react-icons"],
+      taskpane: ["./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
     },
     output: {
       clean: true,
@@ -44,7 +43,7 @@ module.exports = async (env, options) => {
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
+          use: ["ts-loader"],
         },
         {
           test: /\.html$/,
@@ -84,11 +83,6 @@ module.exports = async (env, options) => {
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
         chunks: ["polyfill", "vendor", "taskpane"],
-      }),
-      new HtmlWebpackPlugin({
-        filename: "commands.html",
-        template: "./src/commands/commands.html",
-        chunks: ["commands"],
       }),
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],

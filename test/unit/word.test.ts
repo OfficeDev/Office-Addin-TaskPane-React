@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import * as word from "../../src/taskpane/components/word.App";
+import insertText from "../../src/word-office-document";
 
 /* global describe, global, it, Word */
 
@@ -10,7 +10,6 @@ const WordMockData = {
     document: {
       body: {
         paragraph: {
-          font: {},
           text: "",
         },
         insertParagraph: function (paragraphText: string, insertLocation: Word.InsertLocation): Word.Paragraph {
@@ -29,19 +28,16 @@ const WordMockData = {
   },
 };
 
-const OfficeMockData = {
-  onReady: async function () {},
-};
-
 describe("Word", function () {
-  it("Run", async function () {
+  it("Inserts text", async function () {
     const wordMock: OfficeMockObject = new OfficeMockObject(WordMockData); // Mocking the host specific namespace
     global.Word = wordMock as any;
-    global.Office = new OfficeMockObject(OfficeMockData) as any; // Mocking the common office-js namespace
 
-    const wordApp = new word.default(this.props, this.context);
-    await wordApp.click();
+    await insertText("Hello Word");
 
-    assert.strictEqual(wordMock.context.document.body.paragraph.font.color, "blue");
-  });
+    wordMock.context.document.body.paragraph.load("text");
+    await wordMock.context.sync();
+
+    assert.strictEqual(wordMock.context.document.body.paragraph.text,"Hello Word");
+   });
 });
