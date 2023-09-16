@@ -1,16 +1,16 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import * as powerpoint from "../../src/taskpane/components/PowerPoint.App";
+import insertText from "../../src/powerpoint-office-document";
 
 /* global describe, global, it */
 
 const PowerPointMockData = {
   context: {
     document: {
-      setSelectedDataAsync: function (data: string, options?) {
+      setSelectedDataAsync: function (data: string, callback?) {
         this.data = data;
-        this.options = options;
+        this.callback = callback;
       },
     },
   },
@@ -20,14 +20,13 @@ const PowerPointMockData = {
   onReady: async function () {},
 };
 
-describe("PowerPoint", function () {
-  it("Run", async function () {
-    const officeMock: OfficeMockObject = new OfficeMockObject(PowerPointMockData); // Mocking the common office-js namespace
+describe(`PowerPoint`, function () {
+  it("Inserts text", async function () {
+    const officeMock = new OfficeMockObject(PowerPointMockData);
     global.Office = officeMock as any;
 
-    const powerpointApp = new powerpoint.default(this.props, this.context);
-    await powerpointApp.click();
+    await insertText("Hello PowerPoint");
 
-    assert.strictEqual(officeMock.context.document.data, "Hello World!");
+    assert.strictEqual(officeMock.context.document.data, "Hello PowerPoint");
   });
 });

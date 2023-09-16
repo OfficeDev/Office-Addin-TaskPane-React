@@ -35,11 +35,12 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@fluentui/react": "8.68.0",
+    "@fluentui/react-components": "^9.30.4",
+    "@fluentui/react-icons": "^2.0.214",
     "core-js": "^3.9.1",
     "es6-promise": "^4.2.8",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "regenerator-runtime": "^0.13.7"
   },
   "devDependencies": {
@@ -49,11 +50,9 @@
     "@types/node": "^14.14.22",
     "@types/office-js": "^1.0.256",
     "@types/office-runtime": "^1.0.23",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.11",
-    "@types/react-hot-loader": "^4.1.1",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
     "@types/webpack": "^4.4.34",
-    "@types/webpack-dev-server": "^4.1.0",
     "acorn": "^8.5.0",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
