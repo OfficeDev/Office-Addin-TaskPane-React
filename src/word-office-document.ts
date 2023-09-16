@@ -1,4 +1,4 @@
-/* global Word */
+/* global Word console */
 
 const insertText = async (text: string) => {
   // Write text to the document.

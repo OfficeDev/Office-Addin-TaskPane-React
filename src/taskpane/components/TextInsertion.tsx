@@ -22,11 +22,10 @@ const useStyles = makeStyles({
     maxWidth: "50%",
   },
 });
-  
+
 const insertText = selectInsertionByHost();
 
 const TextInsertion: React.FC = () => {
-  
   const [text, setText] = useState<string>("Some text.");
 
   const handleTextInsertion = async () => {
@@ -40,7 +39,6 @@ const TextInsertion: React.FC = () => {
   const styles = useStyles();
 
   return (
-    
     <div className={styles.textPromptAndInsertion}>
       <Field className={styles.textAreaField} size="large" label="Enter text to be inserted into the document.">
         <Textarea size="large" value={text} onChange={handleTextChange} />
