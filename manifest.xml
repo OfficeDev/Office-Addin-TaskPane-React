@@ -101,7 +101,6 @@
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
-    <Hosts>
       <Host xsi:type="Presentation">
         <DesktopFormFactor>
           <GetStarted>
