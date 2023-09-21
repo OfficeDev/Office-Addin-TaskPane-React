@@ -48,7 +48,7 @@ async function convertProjectToSingleHost(host) {
     `import insertText from "../office-document";`
   );
   updatedTextInsertionComponentContent = updatedTextInsertionComponentContent.replace(
-    `const insertText = selectInsertionByHost();`, 
+    `const insertText = await selectInsertionByHost();`, 
     ``
   );
   await writeFileAsync(`./src/taskpane/components/TextInsertion.tsx`, updatedTextInsertionComponentContent);

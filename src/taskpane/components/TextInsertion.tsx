@@ -23,12 +23,11 @@ const useStyles = makeStyles({
   },
 });
 
-const insertText = selectInsertionByHost();
-
 const TextInsertion: React.FC = () => {
   const [text, setText] = useState<string>("Some text.");
 
   const handleTextInsertion = async () => {
+    const insertText = await selectInsertionByHost();
     await insertText(text);
   };
 

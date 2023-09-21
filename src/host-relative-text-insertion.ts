@@ -4,28 +4,29 @@ import { default as insertWordText } from "./taskpane/word-office-document";
 
 /* global Office */
 
-let insertText;
+export const selectInsertionByHost = async () => {
 
-Office.onReady(async (info) => {
-  switch (info.host) {
-    case Office.HostType.Excel: {
-      insertText = insertExcelText;
-      break;
-    }
-    case Office.HostType.PowerPoint: {
-      insertText = insertPowerPointText;
-      break;
-    }
-    case Office.HostType.Word: {
-      insertText = insertWordText;
-      break;
-    }
-    default: {
-      throw new Error("There is no end-to-end test for that host.");
-    }
-  }
-});
+  let insertText;
 
-export const selectInsertionByHost = () => {
+  await Office.onReady(async (info) => {
+    switch (info.host) {
+      case Office.HostType.Excel: {
+        insertText = insertExcelText;
+        break;
+      }
+      case Office.HostType.PowerPoint: {
+        insertText = insertPowerPointText;
+        break;
+      }
+      case Office.HostType.Word: {
+        insertText = insertWordText;
+        break;
+      }
+      default: {
+        throw new Error("There is no end-to-end test for that host.");
+      }
+    }
+  });
+
   return insertText;
 };
