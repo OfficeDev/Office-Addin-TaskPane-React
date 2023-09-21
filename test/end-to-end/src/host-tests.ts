@@ -1,7 +1,6 @@
-import { ClipboardCheckmark16Filled } from "@fluentui/react-icons";
-import {default as insertExcelText} from "../../../src/excel-office-document";
-import {default as insertPowerPointText} from "../../../src/powerpoint-office-document";
-import {default as insertWordText} from "../../../src/word-office-document";
+import {default as insertExcelText} from "../../../src/taskpane/excel-office-document";
+import {default as insertPowerPointText} from "../../../src/taskpane/powerpoint-office-document";
+import {default as insertWordText} from "../../../src/taskpane/word-office-document";
 import * as testHelpers from "./test-helpers";
 import { sendTestResults } from "office-addin-test-helpers";
 

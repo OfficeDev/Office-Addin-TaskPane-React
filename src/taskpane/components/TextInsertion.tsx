@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Field, Textarea, tokens, makeStyles } from "@fluentui/react-components";
-import { selectInsertionByHost } from "../../../test/end-to-end/src/host-relative-text-insertion";
+import { selectInsertionByHost } from "../../host-relative-text-insertion";
 
 const useStyles = makeStyles({
   instructions: {

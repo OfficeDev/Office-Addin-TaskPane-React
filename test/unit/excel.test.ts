@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import insertText from "../../src/excel-office-document";
+import insertText from "../../src/taskpane/excel-office-document";
 
 /* global describe, global, it */
 

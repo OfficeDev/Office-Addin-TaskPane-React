@@ -1,6 +1,6 @@
-import { default as insertExcelText} from "../../../src/excel-office-document";
-import { default as insertPowerPointText} from "../../../src/powerpoint-office-document";
-import { default as insertWordText} from "../../../src/word-office-document";
+import { default as insertExcelText} from "./taskpane/excel-office-document";
+import { default as insertPowerPointText} from "./taskpane/powerpoint-office-document";
+import { default as insertWordText} from "./taskpane/word-office-document";
 
 /* global Office */
 
