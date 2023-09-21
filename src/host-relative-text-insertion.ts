@@ -5,7 +5,6 @@ import { default as insertWordText } from "./taskpane/word-office-document";
 /* global Office */
 
 export const selectInsertionByHost = async () => {
-
   let insertText;
 
   await Office.onReady(async (info) => {
