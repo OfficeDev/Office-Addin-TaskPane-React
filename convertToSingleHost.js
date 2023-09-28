@@ -57,7 +57,6 @@ async function convertProjectToSingleHost(host) {
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
     await unlinkFileAsync(`./src/taskpane/${getHostName(host)}-office-document.ts`);
-   // await unlinkFileAsync(`./src/taskpane/components/${getHostName(host)}.App.tsx`);
   });
   
   await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
