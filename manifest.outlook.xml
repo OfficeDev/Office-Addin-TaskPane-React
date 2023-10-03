@@ -53,6 +53,7 @@
       <Hosts>
         <Host xsi:type="MailHost">
           <DesktopFormFactor>
+            <FunctionFile resid="Commands.Url" />
             <ExtensionPoint xsi:type="MessageComposeCommandSurface">
               <OfficeTab id="TabDefault">
                 <Group id="msgComposeGroup">
@@ -85,6 +86,7 @@
           <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
         </bt:Images>
         <bt:Urls>
+          <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html" />
           <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html" />
         </bt:Urls>
         <bt:ShortStrings>
@@ -93,6 +95,7 @@
         </bt:ShortStrings>
         <bt:LongStrings>
           <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a task pane."/>
+          <bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
         </bt:LongStrings>
       </Resources>
     </VersionOverrides>

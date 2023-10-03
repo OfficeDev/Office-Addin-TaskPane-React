@@ -18,10 +18,11 @@
     <div id="container"></div>
 
     <!-- 
-        React v. 18 and Fluent UI React v. 9 use modern JavaScript syntax that is not supported in
-        Trident (Internet Explorer), so this add-in won't work in Office versions
-        that use Trident. The script below makes the following div display if the
-        webview is Trident, and hides the React container div. 
+        Fluent UI React v. 9 uses modern JavaScript syntax that is not supported in
+        Trident (Internet Explorer) or EdgeHTML (Edge Legacy), so this add-in won't
+        work in Office versions that use these webviews. The script below makes the 
+        following div display when an unsupported webview is in use, and hides the 
+        React container div. 
     -->
     <div id="tridentmessage" style="display: none; padding: 10;">
         This add-in will not run in your version of Office. Please upgrade either to perpetual Office 2021 (or later) 
