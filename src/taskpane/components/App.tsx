@@ -12,7 +12,7 @@ interface AppProps {
 const useStyles = makeStyles({
   root: {
     minHeight: "100vh",
-  }
+  },
 });
 
 const App = (props: AppProps) => {
