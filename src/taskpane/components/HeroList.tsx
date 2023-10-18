@@ -1,32 +1,62 @@
 import * as React from "react";
+import { tokens, makeStyles } from "@fluentui/react-components";
 
 export interface HeroListItem {
-  icon: string;
+  icon: React.JSX.Element;
   primaryText: string;
 }
 
 export interface HeroListProps {
   message: string;
   items: HeroListItem[];
-  children: any;
 }
 
-export default class HeroList extends React.Component<HeroListProps> {
-  render() {
-    const { children, items, message } = this.props;
+const useStyles = makeStyles({
+  list: {
+    marginTop: "20px",
+  },
+  listItem: {
+    paddingBottom: "20px",
+    display: "flex",
+  },
+  icon: {
+    marginRight: "10px",
+  },
+  itemText: {
+    fontSize: tokens.fontSizeBase300,
+    fontColor: tokens.colorNeutralBackgroundStatic,
+  },
+  welcome__main: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  message: {
+    fontSize: tokens.fontSizeBase500,
+    fontColor: tokens.colorNeutralBackgroundStatic,
+    fontWeight: tokens.fontWeightRegular,
+    paddingLeft: "10px",
+    paddingRight: "10px",
+  },
+});
 
-    const listItems = items.map((item, index) => (
-      <li className="ms-ListItem" key={index}>
-        <i className={`ms-Icon ms-Icon--${item.icon}`}></i>
-        <span className="ms-font-m ms-fontColor-neutralPrimary">{item.primaryText}</span>
-      </li>
-    ));
-    return (
-      <div className="ms-welcome__main">
-        <h2 className="ms-font-xl ms-fontWeight-semilight ms-fontColor-neutralPrimary ms-u-slideUpIn20">{message}</h2>
-        <ul className="ms-List ms-welcome__features ms-u-slideUpIn10">{listItems}</ul>
-        {children}
-      </div>
-    );
-  }
-}
+const HeroList = (props: HeroListProps) => {
+  const { items, message } = props;
+  const styles = useStyles();
+
+  const listItems = items.map((item, index) => (
+    <li className={styles.listItem} key={index}>
+      <i className={styles.icon}>{item.icon}</i>
+      <span className={styles.itemText}>{item.primaryText}</span>
+    </li>
+  ));
+  return (
+    <div className={styles.welcome__main}>
+      <h2 className={styles.message}>{message}</h2>
+      <ul className={styles.list}>{listItems}</ul>
+    </div>
+  );
+};
+
+export default HeroList;

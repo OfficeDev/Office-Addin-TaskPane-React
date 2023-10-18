@@ -19,8 +19,8 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      vendor: ["react", "react-dom", "core-js", "@fluentui/react"],
-      taskpane: ["react-hot-loader/patch", "./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
+      vendor: ["react", "react-dom", "core-js", "@fluentui/react-components", "@fluentui/react-icons"],
+      taskpane: ["./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -44,7 +44,7 @@ module.exports = async (env, options) => {
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: ["react-hot-loader/webpack", "ts-loader"],
+          use: ["ts-loader"],
         },
         {
           test: /\.html$/,

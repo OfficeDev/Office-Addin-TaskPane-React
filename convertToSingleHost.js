@@ -1,6 +1,5 @@
 /* global require, process, console */
 
-const convertTest = process.argv[3] === "convert-test";
 const fs = require("fs");
 const host = process.argv[2];
 const hosts = ["excel", "onenote", "outlook", "powerpoint", "project", "word"];
@@ -9,7 +8,6 @@ const util = require("util");
 const testPackages = [
   "@types/mocha",
   "@types/node",
-  "current-processes",
   "mocha",
   "office-addin-mock",
   "office-addin-test-helpers",
@@ -29,84 +27,67 @@ async function modifyProjectForSingleHost(host) {
   }
   await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
-  if (!convertTest) {
-    await updateLaunchJsonFile();
-  }
+  await updateLaunchJsonFile();
 }
 
 async function convertProjectToSingleHost(host) {
-  // copy host-specific manifest over manifest.xml
+  // Copy host-specific manifest over manifest.xml
   const manifestContent = await readFileAsync(`./manifest.${host}.xml`, "utf8");
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
-  // copy host-specific App.tsx over src/taskpane/app/components/App.tsx
+  // Copy host-specific office-document.ts over src/office-document.ts
   const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/components/${hostName}.App.tsx`, 'utf8');
-  await writeFileAsync(`./src/taskpane/components/App.tsx`, srcContent);
+  const srcContent = await readFileAsync(`./src/taskpane/${hostName}-office-document.ts`, 'utf8');
+  await writeFileAsync(`./src/taskpane/office-document.ts`, srcContent);  
 
-  // delete all test files by default for now - eventually we want to convert the tests by default
-  if (convertTest && (host === "excel" || host === "word")) {
-    // copy over host-specific taskpane test code to test-taskpane.ts
-    const testTaskpaneContent = await readFileAsync(`./test/src/test.${host}.app.tsx`, "utf8");
-    const updatedTestTaskpaneContent = testTaskpaneContent.replace(
-      `../../../src/taskpane/components/${host}.App`, 
-      `../../../src/taskpane/components/App`
-    );
-    await writeFileAsync(`./test/src/test.app.tsx`, updatedTestTaskpaneContent);
+  // Remove code from the TextInsertion component that is needed only for tests or
+  // that is host-specific.
+  const originalTextInsertionComponentContent = await readFileAsync(`./src/taskpane/components/TextInsertion.tsx`, "utf8");
+  let updatedTextInsertionComponentContent = originalTextInsertionComponentContent.replace(
+    `import { selectInsertionByHost } from "../../host-relative-text-insertion";`, 
+    `import insertText from "../office-document";`
+  );
+  updatedTextInsertionComponentContent = updatedTextInsertionComponentContent.replace(
+    `const insertText = await selectInsertionByHost();`, 
+    ``
+  );
+  await writeFileAsync(`./src/taskpane/components/TextInsertion.tsx`, updatedTextInsertionComponentContent);
 
-    // update ui-test.ts to only run against specified host
-    const testContent = await readFileAsync(`./test/ui-test.ts`, "utf8");
-    const updatedTestContent = testContent.replace(`const hosts = ["Excel", "Word"]`, `const hosts = ["${host}"]`);
-    await writeFileAsync(`./test/ui-test.ts`, updatedTestContent);
-
-    // delete all host-specific test files after converting to single host
-    hosts.forEach(async function (host) {
-      if (host == "excel" || host == "word") {
-        await unlinkFileAsync(`./test/src/test.${host}.app.tsx`);
-      }
-    });
-  } else {
-    deleteFolder(path.resolve(`./test`));
-  }
-
-  // delete all host-specific files
+  // Delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/components/${getHostName(host)}.App.tsx`);
+    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}-office-document.ts`);
   });
+  
+  await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
 
-  // delete the .github folder
+  deleteFolder(path.resolve(`./test`));
+  
+  // Delete the .github folder
   deleteFolder(path.resolve(`./.github`));
 
-  // delete CI/CD pipeline files
+  // Delete CI/CD pipeline files
   deleteFolder(path.resolve(`./.azure-devops`));
 
-  // delete repo support files
+  // Delete repo support files
   await deleteSupportFiles();
 }
 
 async function updatePackageJsonForSingleHost(host) {
-  // update package.json to reflect selected host
+  // Update package.json to reflect selected host
   const packageJson = `./package.json`;
   const data = await readFileAsync(packageJson, "utf8");
   let content = JSON.parse(data);
 
-  // update 'config' section in package.json to use selected host
+  // Update 'config' section in package.json to use selected host
   content.config["app_to_debug"] = host;
 
-  // remove 'engines' section
+  // Remove 'engines' section
   delete content.engines;
 
-  // update sideload and unload scripts to use selected host.
-  ["sideload", "unload"].forEach((key) => {
-    content.scripts[key] = content.scripts[`${key}:${host}`];
-  });
-
-  // remove scripts that are unrelated to the selected host
+  // Remove scripts that are unrelated to the selected host
   Object.keys(content.scripts).forEach(function (key) {
     if (
-      key.startsWith("sideload:") ||
-      key.startsWith("unload:") ||
       key === "convert-to-single-host" ||
       key === "start:desktop:outlook"
     ) {
@@ -114,28 +95,26 @@ async function updatePackageJsonForSingleHost(host) {
     }
   });
 
-  if (!convertTest) {
-    // remove test-related scripts
-    Object.keys(content.scripts).forEach(function (key) {
-      if (key.includes("test")) {
-        delete content.scripts[key];
-      }
-    });
+  // Remove test-related scripts
+  Object.keys(content.scripts).forEach(function (key) {
+    if (key.includes("test")) {
+      delete content.scripts[key];
+    }
+  });
 
-    // remove test-related packages
-    Object.keys(content.devDependencies).forEach(function (key) {
-      if (testPackages.includes(key)) {
-        delete content.devDependencies[key];
-      }
-    });
-  }
+  // Remove test-related packages
+  Object.keys(content.devDependencies).forEach(function (key) {
+    if (testPackages.includes(key)) {
+      delete content.devDependencies[key];
+    }
+  });
 
-  // write updated json to file
+  // Write updated json to file
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
 async function updateLaunchJsonFile() {
-  // remove 'Debug Tests' configuration from launch.json
+  // Remove 'Debug Tests' configuration from launch.json
   const launchJson = `.vscode/launch.json`;
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
   const regex = /(.+{\r?\n.*"name": "Debug (?:UI|Unit) Tests",\r?\n(?:.*\r?\n)*?.*},.*\r?\n)/gm;
