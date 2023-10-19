@@ -44,10 +44,7 @@ hosts.forEach(function (host) {
           assert.strictEqual(testValues.length > 0, true);
         });
         it("Validate expected result name", async function () {
-          assert.strictEqual(
-            testValues[0].resultName,
-            host.toLowerCase() === "excel" ? "fill-color" : "output-message"
-          );
+          assert.strictEqual(testValues[0].resultName, "output-message");
         });
         it("Validate expected result", async function () {
           assert.strictEqual(testValues[0].resultValue, testValues[0].expectedValue);
