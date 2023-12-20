@@ -31,7 +31,11 @@
     {
       "label": "Debug: Excel Desktop",
       "type": "npm",
-      "script": "start:desktop -- --app excel",
+      "script": "start -- --app excel",
+      "dependsOn": [
+        "Check OS",
+        "Link"
+      ],
       "presentation": {
         "clear": true,
         "panel": "dedicated",
@@ -41,7 +45,11 @@
     {
       "label": "Debug: Outlook Desktop",
       "type": "npm",
-      "script": "start:desktop -- --app outlook",
+      "script": "start -- --app outlook",
+      "dependsOn": [
+        "Check OS",
+        "Install"
+      ],
       "presentation": {
         "clear": true,
         "panel": "dedicated",
@@ -51,7 +59,11 @@
     {
       "label": "Debug: PowerPoint Desktop",
       "type": "npm",
-      "script": "start:desktop -- --app powerpoint",
+      "script": "start -- --app powerpoint",
+      "dependsOn": [
+        "Check OS",
+        "Install"
+      ],
       "presentation": {
         "clear": true,
         "panel": "dedicated",
@@ -61,7 +73,11 @@
     {
       "label": "Debug: Word Desktop",
       "type": "npm",
-      "script": "start:desktop -- --app word",
+      "script": "start -- --app word",
+      "dependsOn": [
+        "Check OS",
+        "Install"
+      ],
       "presentation": {
         "clear": true,
         "panel": "dedicated",
@@ -126,5 +142,22 @@
       },
       "problemMatcher": []
     },
-  ]
+    {
+      "label": "Check OS",
+      "type": "shell",
+      "windows": {
+        "command": "echo 'Sideloading on Windows is supported'"
+      },
+      "linux": {
+        "command": "echo 'Sideloading on Linux is not supported' && exit 1"
+      },
+      "osx": {
+        "command": "echo 'Sideloading on Mac is not supported' && exit 1"
+      },
+      "presentation": {
+        "clear": true,
+        "panel": "dedicated",
+      },
+    }
+  ],
 }
