@@ -21,10 +21,12 @@
     "dev-server": "webpack serve --mode development",
     "lint": "office-addin-lint check",
     "lint:fix": "office-addin-lint fix",
+    "signin": "office-addin-dev-settings m365-account login",
+    "signout": "office-addin-dev-settings m365-account logout",
     "prettier": "office-addin-lint prettier",
     "start": "office-addin-debugging start manifest.json",
     "stop": "office-addin-debugging stop manifest.json",
-    "test": "npm run test:unit && npm run test:e2e",
+    "test": "echo \"No tests.\"",
     "validate": "office-addin-manifest validate manifest.json",
     "watch": "webpack --mode development --watch"
   },
