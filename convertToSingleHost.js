@@ -1,15 +1,13 @@
 /* global require, process, console */
 
-const convertTest = process.argv[3] === "convert-test";
 const fs = require("fs");
 const host = "outlook";
-const hosts = ["outlook", "word", "excel", "powerpoint"];
+const hosts = ["excel", "outlook", "powerpoint", "word"];
 const path = require("path");
 const util = require("util");
 const testPackages = [
   "@types/mocha",
   "@types/node",
-  "current-processes",
   "mocha",
   "office-addin-mock",
   "office-addin-test-helpers",
@@ -27,43 +25,37 @@ async function modifyProjectForSingleHost(host) {
   if (!hosts.includes(host)) {
     throw new Error(`'${host}' is not a supported host.`);
   }
-  await convertProjectToSingleHost();
+  await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
-  if (!convertTest) {
-    await updateLaunchJsonFile();
-  }
+  await updateLaunchJsonFile();
 }
 
-async function convertProjectToSingleHost() {
-  // delete the .github folder
+async function convertProjectToSingleHost(host) {
+  // Delete the test folder
+  deleteFolder(path.resolve(`./test`));
+
+  // Delete the .github folder
   deleteFolder(path.resolve(`./.github`));
 
-  // delete CI/CD pipeline files
+  // Delete CI/CD pipeline files
   deleteFolder(path.resolve(`./.azure-devops`));
 
-  // delete repo support files
+  // Delete repo support files
   await deleteSupportFiles();
 }
 
 async function updatePackageJsonForSingleHost(host) {
-  // update package.json to reflect selected host
+  // Update package.json to reflect selected host
   const packageJson = `./package.json`;
   const data = await readFileAsync(packageJson, "utf8");
   let content = JSON.parse(data);
 
-  // remove 'engines' section
+  // Remove 'engines' section
   delete content.engines;
 
-  // update sideload and unload scripts to use selected host.
-  ["sideload", "unload"].forEach((key) => {
-    content.scripts[key] = content.scripts[`${key}:${host}`];
-  });
-
-  // remove scripts that are unrelated to the selected host
+  // Remove scripts that are unrelated to the selected host
   Object.keys(content.scripts).forEach(function (key) {
     if (
-      key.startsWith("sideload:") ||
-      key.startsWith("unload:") ||
       key === "convert-to-single-host" ||
       key === "start:desktop:outlook"
     ) {
@@ -71,26 +63,26 @@ async function updatePackageJsonForSingleHost(host) {
     }
   });
 
-  // remove test-related scripts
+  // Remove test-related scripts
   Object.keys(content.scripts).forEach(function (key) {
     if (key.includes("test")) {
       delete content.scripts[key];
     }
   });
 
-  // remove test-related packages
+  // Remove test-related packages
   Object.keys(content.devDependencies).forEach(function (key) {
     if (testPackages.includes(key)) {
       delete content.devDependencies[key];
     }
   });
 
-  // write updated json to file
+  // Write updated json to file
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
 async function updateLaunchJsonFile() {
-  // remove 'Debug Tests' configuration from launch.json
+  // Remove 'Debug Tests' configuration from launch.json
   const launchJson = `.vscode/launch.json`;
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
   const regex = /(.+{\r?\n.*"name": "Debug (?:UI|Unit) Tests",\r?\n(?:.*\r?\n)*?.*},.*\r?\n)/gm;
