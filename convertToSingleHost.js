@@ -1,10 +1,15 @@
 /* global require, process, console */
 
 const fs = require("fs");
-const host = process.argv[2];
-const hosts = ["excel", "onenote", "outlook", "powerpoint", "project", "word"];
 const path = require("path");
 const util = require("util");
+const childProcess = require("child_process");
+
+const host = process.argv[2];
+const manifestType = process.argv[3];
+const projectName = process.argv[4];
+let appId = process.argv[5];
+const hosts = ["excel", "onenote", "outlook", "powerpoint", "project", "word"];
 const testPackages = [
   "@types/mocha",
   "@types/node",
@@ -61,6 +66,7 @@ async function convertProjectToSingleHost(host) {
   
   await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
 
+  // Delete test folder
   deleteFolder(path.resolve(`./test`));
   
   // Delete the .github folder
@@ -87,10 +93,7 @@ async function updatePackageJsonForSingleHost(host) {
 
   // Remove scripts that are unrelated to the selected host
   Object.keys(content.scripts).forEach(function (key) {
-    if (
-      key === "convert-to-single-host" ||
-      key === "start:desktop:outlook"
-    ) {
+    if (key === "convert-to-single-host" || key === "start:desktop:outlook") {
       delete content.scripts[key];
     }
   });
@@ -109,7 +112,7 @@ async function updatePackageJsonForSingleHost(host) {
     }
   });
 
-  // Write updated json to file
+  // Write updated JSON to file
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
@@ -170,11 +173,137 @@ async function deleteSupportFiles() {
   await unlinkFileAsync("package-lock.json");
 }
 
+async function deleteJSONManifestRelatedFiles() {
+  await unlinkFileAsync("manifest.json");
+  await unlinkFileAsync("assets/color.png");
+  await unlinkFileAsync("assets/outline.png");
+}
+
+async function deleteXMLManifestRelatedFiles() {
+  await unlinkFileAsync("manifest.xml");
+}
+
+async function updatePackageJsonForXMLManifest() {
+  const packageJson = `./package.json`;
+  const data = await readFileAsync(packageJson, "utf8");
+  let content = JSON.parse(data);
+
+  // Remove scripts that are only used with JSON manifest
+  delete content.scripts["signin"];
+  delete content.scripts["signout"];
+
+  // Write updated JSON to file
+  await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
+}
+
+async function updatePackageJsonForJSONManifest() {
+  const packageJson = `./package.json`;
+  const data = await readFileAsync(packageJson, "utf8");
+  let content = JSON.parse(data);
+
+  // Remove special start scripts
+  Object.keys(content.scripts).forEach(function (key) {
+    if (key.includes("start:")) {
+      delete content.scripts[key];
+    }
+  });
+
+  // Change manifest file name extension
+  content.scripts.start = "office-addin-debugging start manifest.json";
+  content.scripts.stop = "office-addin-debugging stop manifest.json";
+  content.scripts.validate = "office-addin-manifest validate manifest.json";
+
+  // Write updated JSON to file
+  await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
+}
+
+async function updateTasksJsonFileForJSONManifest() {
+  const tasksJson = `.vscode/tasks.json`;
+  const data = await readFileAsync(tasksJson, "utf8");
+  let content = JSON.parse(data);
+
+  content.tasks.forEach(function (task) {
+    if (task.label.startsWith("Build")) {
+      task.dependsOn = ["Install"];
+    }
+    if (task.label === "Debug: Outlook Desktop") {
+      task.script = "start";
+      task.dependsOn = ["Check OS", "Install"];
+    }
+  });
+
+  const checkOSTask = {
+    label: "Check OS",
+    type: "shell",
+    windows: {
+      command: "echo 'Sideloading in Outlook on Windows is supported'",
+    },
+    linux: {
+      command: "echo 'Sideloading on Linux is not supported' && exit 1",
+    },
+    osx: {
+      command: "echo 'Sideloading in Outlook on Mac is not supported' && exit 1",
+    },
+    presentation: {
+      clear: true,
+      panel: "dedicated",
+    },
+  };
+
+  content.tasks.push(checkOSTask);
+  await writeFileAsync(tasksJson, JSON.stringify(content, null, 2));
+}
+
+async function updateWebpackConfigForJSONManifest() {
+  const webPack = `webpack.config.js`;
+  const webPackContent = await readFileAsync(webPack, "utf8");
+  const updatedContent = webPackContent.replace(".xml", ".json");
+  await writeFileAsync(webPack, updatedContent);
+}
+
+async function modifyProjectForJSONManifest() {
+  await updatePackageJsonForJSONManifest();
+  await updateWebpackConfigForJSONManifest();
+  await updateTasksJsonFileForJSONManifest();
+  await deleteXMLManifestRelatedFiles();
+}
+
 /**
  * Modify the project so that it only supports a single host.
  * @param host The host to support.
  */
 modifyProjectForSingleHost(host).catch((err) => {
-  console.error(`Error: ${err instanceof Error ? err.message : err}`);
+  console.error(`Error modifying for single host: ${err instanceof Error ? err.message : err}`);
   process.exitCode = 1;
 });
+
+let manifestPath = "manifest.xml";
+
+// Uncomment when this template supports JSON manifest
+// if (host !== "outlook" || manifestType !== "json") {
+  // Remove things that are only relevant to JSON manifest
+  deleteJSONManifestRelatedFiles();
+  updatePackageJsonForXMLManifest();
+// } else {
+//   manifestPath = "manifest.json";
+//   modifyProjectForJSONManifest().catch((err) => {
+//     console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
+//     process.exitCode = 1;
+//   });
+// }
+
+if (projectName) {
+  if (!appId) {
+    appId = "random";
+  }
+
+  // Modify the manifest to include the name and id of the project
+  const cmdLine = `npx office-addin-manifest modify ${manifestPath} -g ${appId} -d ${projectName}`;
+  childProcess.exec(cmdLine, (error, stdout) => {
+    if (error) {
+      Promise.reject(stdout);
+    } else {
+      Promise.resolve();
+    }
+  });
+}
