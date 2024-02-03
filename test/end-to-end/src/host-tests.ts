@@ -40,7 +40,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
     await testHelpers.sleep(2000);
 
     // Get output of executed taskpane code
-    PowerPoint.run(async (context: PowerPoint.RequestContext) => {
+    await PowerPoint.run(async (context: PowerPoint.RequestContext) => {
       // get text from selected text shape
       const shapes = context.presentation.getSelectedShapes();
       const shape = shapes.getItemAt(0);
@@ -66,7 +66,7 @@ export const testWordEnd2End = async (testServerPort: number): Promise<void> => 
     await testHelpers.sleep(2000);
 
     // Get output of executed taskpane code
-    Word.run(async (context) => {
+    await Word.run(async (context) => {
       var firstParagraph = context.document.body.paragraphs.getFirst();
       firstParagraph.load("text");
       await context.sync();

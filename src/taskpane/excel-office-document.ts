@@ -1,19 +1,13 @@
-/* global Excel console */
+/* global Excel */
 
 const insertText = async (text: string) => {
   // Write text to the top left cell.
-  try {
-    Excel.run(async (context) => {
-      const sheet = context.workbook.worksheets.getActiveWorksheet();
-      const range = sheet.getRange("A1");
-      range.values = [[text]];
-      range.format.autofitColumns();
-      return context.sync();
-    });
-  } catch (error) {
-    console.log("Error: " + error);
-    Promise.reject(error);
-  }
+  return Excel.run(async (context) => {
+    const sheet: Excel.Worksheet = context.workbook.worksheets.getActiveWorksheet();
+    const range: Excel.Range = sheet.getRange("A1");
+    range.values = [[text]];
+    return context.sync();
+  });
 };
 
 export default insertText;
