@@ -1,6 +1,6 @@
-import {default as insertExcelText} from "../../../src/taskpane/excel-office-document";
-import {default as insertPowerPointText} from "../../../src/taskpane/powerpoint-office-document";
-import {default as insertWordText} from "../../../src/taskpane/word-office-document";
+import { default as insertExcelText } from "../../../src/taskpane/excel-office-document";
+import { default as insertPowerPointText } from "../../../src/taskpane/powerpoint-office-document";
+import { default as insertWordText } from "../../../src/taskpane/word-office-document";
 import * as testHelpers from "./test-helpers";
 import { sendTestResults } from "office-addin-test-helpers";
 
@@ -31,7 +31,7 @@ export const testExcelEnd2End = async (testServerPort: number): Promise<void> =>
   } catch {
     Promise.reject();
   }
-}
+};
 
 export const testPowerPointEnd2End = async (testServerPort: number): Promise<void> => {
   try {
@@ -44,10 +44,9 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
       // get text from selected text shape
       const shapes = context.presentation.getSelectedShapes();
       const shape = shapes.getItemAt(0);
-      const textFrame = shape.textFrame.load("textRange");
-      textFrame.textRange.load("text");
+      shape.textFrame.textRange.load("text");
       await context.sync();
-      const selectedText = textFrame.textRange.text;
+      const selectedText = shape.textFrame.textRange.text;
 
       // send test results
       testHelpers.addTestResult(testValues, "output-message", selectedText, "Hello PowerPoint End2End Test");
@@ -58,7 +57,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
   } catch {
     Promise.reject();
   }
-}
+};
 
 export const testWordEnd2End = async (testServerPort: number): Promise<void> => {
   try {
@@ -82,4 +81,4 @@ export const testWordEnd2End = async (testServerPort: number): Promise<void> => 
   } catch {
     Promise.reject();
   }
-}
+};

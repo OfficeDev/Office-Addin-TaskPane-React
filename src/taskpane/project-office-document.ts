@@ -32,11 +32,12 @@ const insertText = async (text: string) => {
           );
         }
       } else {
-        console.log(result.error);
+        throw result.error.message;
       }
     });
   } catch (error) {
     console.error(error);
+    Promise.reject(error);
   }
 };
 

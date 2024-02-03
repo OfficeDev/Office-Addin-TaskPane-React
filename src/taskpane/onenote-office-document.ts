@@ -7,9 +7,11 @@ const insertText = async (text: string) => {
       const page = context.application.getActivePage();
       page.title = text;
       await context.sync();
+      Promise.resolve();
     });
   } catch (error) {
     console.log("Error: " + error);
+    Promise.reject(error);
   }
 };
 

@@ -42,18 +42,21 @@ async function convertProjectToSingleHost(host) {
 
   // Copy host-specific office-document.ts over src/office-document.ts
   const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/${hostName}-office-document.ts`, 'utf8');
-  await writeFileAsync(`./src/taskpane/office-document.ts`, srcContent);  
+  const srcContent = await readFileAsync(`./src/taskpane/${hostName}-office-document.ts`, "utf8");
+  await writeFileAsync(`./src/taskpane/office-document.ts`, srcContent);
 
   // Remove code from the TextInsertion component that is needed only for tests or
   // that is host-specific.
-  const originalTextInsertionComponentContent = await readFileAsync(`./src/taskpane/components/TextInsertion.tsx`, "utf8");
+  const originalTextInsertionComponentContent = await readFileAsync(
+    `./src/taskpane/components/TextInsertion.tsx`,
+    "utf8"
+  );
   let updatedTextInsertionComponentContent = originalTextInsertionComponentContent.replace(
-    `import { selectInsertionByHost } from "../../host-relative-text-insertion";`, 
+    `import { selectInsertionByHost } from "../../host-relative-text-insertion";`,
     `import insertText from "../office-document";`
   );
   updatedTextInsertionComponentContent = updatedTextInsertionComponentContent.replace(
-    `const insertText = await selectInsertionByHost();`, 
+    `const insertText = await selectInsertionByHost();`,
     ``
   );
   await writeFileAsync(`./src/taskpane/components/TextInsertion.tsx`, updatedTextInsertionComponentContent);
@@ -63,12 +66,12 @@ async function convertProjectToSingleHost(host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
     await unlinkFileAsync(`./src/taskpane/${getHostName(host)}-office-document.ts`);
   });
-  
+
   await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
 
   // Delete test folder
   deleteFolder(path.resolve(`./test`));
-  
+
   // Delete the .github folder
   deleteFolder(path.resolve(`./.github`));
 
@@ -126,15 +129,15 @@ async function updateLaunchJsonFile() {
 }
 
 function getHostName(host) {
-  switch(host) {
+  switch (host) {
     case "excel":
       return "Excel";
     case "onenote":
       return "OneNote";
     case "outlook":
-      return "Outlook"
+      return "Outlook";
     case "powerpoint":
-      return "PowerPoint";    
+      return "PowerPoint";
     case "project":
       return "Project";
     case "word":
@@ -281,9 +284,9 @@ let manifestPath = "manifest.xml";
 
 // Uncomment when this template supports JSON manifest
 // if (host !== "outlook" || manifestType !== "json") {
-  // Remove things that are only relevant to JSON manifest
-  deleteJSONManifestRelatedFiles();
-  updatePackageJsonForXMLManifest();
+// Remove things that are only relevant to JSON manifest
+deleteJSONManifestRelatedFiles();
+updatePackageJsonForXMLManifest();
 // } else {
 //   manifestPath = "manifest.json";
 //   modifyProjectForJSONManifest().catch((err) => {

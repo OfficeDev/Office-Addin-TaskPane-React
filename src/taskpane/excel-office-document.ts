@@ -12,6 +12,7 @@ const insertText = async (text: string) => {
     });
   } catch (error) {
     console.log("Error: " + error);
+    Promise.reject(error);
   }
 };
 

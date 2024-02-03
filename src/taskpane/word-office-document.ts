@@ -7,9 +7,11 @@ const insertText = async (text: string) => {
       let body = context.document.body;
       body.insertParagraph(text, Word.InsertLocation.end);
       await context.sync();
+      Promise.resolve();
     });
   } catch (error) {
     console.log("Error: " + error);
+    Promise.reject(error);
   }
 };
 
