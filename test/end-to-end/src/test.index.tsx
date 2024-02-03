@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "../../../src/taskpane/components/App";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { pingTestServer } from "office-addin-test-helpers";
-import { testExcelEnd2End, testPowerPointEnd2End, testWordEnd2End} from "./host-tests"
+import { testExcelEnd2End, testPowerPointEnd2End, testWordEnd2End } from "./host-tests";
 
 /* global document, Office, module, require */
 
@@ -45,5 +45,3 @@ if ((module as any).hot) {
     root.render(NextApp);
   });
 }
-
-

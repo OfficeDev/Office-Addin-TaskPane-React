@@ -4,14 +4,14 @@ import { default as insertWordText } from "../../../src/taskpane/word-office-doc
 import * as testHelpers from "./test-helpers";
 import { sendTestResults } from "office-addin-test-helpers";
 
-/* global document Excel Office PowerPoint Word  */
+/* global Excel PowerPoint Word  */
 
 let testValues: any = [];
 
 export const testExcelEnd2End = async (testServerPort: number): Promise<void> => {
   try {
     // Execute taskpane code
-    insertExcelText("Hello Excel End2End Test");
+    await insertExcelText("Hello Excel End2End Test");
     await testHelpers.sleep(2000);
 
     // Get output of executed taskpane code
@@ -36,7 +36,7 @@ export const testExcelEnd2End = async (testServerPort: number): Promise<void> =>
 export const testPowerPointEnd2End = async (testServerPort: number): Promise<void> => {
   try {
     // Execute taskpane code
-    insertPowerPointText("Hello PowerPoint End2End Test");
+    await insertPowerPointText("Hello PowerPoint End2End Test");
     await testHelpers.sleep(2000);
 
     // Get output of executed taskpane code
@@ -62,7 +62,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
 export const testWordEnd2End = async (testServerPort: number): Promise<void> => {
   try {
     // Execute taskpane code
-    insertWordText("Hello Word End2End Test");
+    await insertWordText("Hello Word End2End Test");
     await testHelpers.sleep(2000);
 
     // Get output of executed taskpane code
