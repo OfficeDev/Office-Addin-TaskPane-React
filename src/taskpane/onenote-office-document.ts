@@ -5,7 +5,7 @@ const insertText = async (text: string) => {
   return OneNote.run(async (context) => {
     const page = context.application.getActivePage();
     page.title = text;
-    await context.sync();
+    return context.sync();
   });
 };
 
