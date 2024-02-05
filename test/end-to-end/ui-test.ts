@@ -44,10 +44,10 @@ hosts.forEach(function (host) {
           assert.strictEqual(testValues.length > 0, true);
         });
         it("Validate expected result name", async function () {
-          assert.strictEqual(testValues[0].resultName, "output-message");
+          assert.strictEqual(testValues[0].resultName, "output-message", "Expected name found");
         });
         it("Validate expected result", async function () {
-          assert.strictEqual(testValues[0].resultValue, testValues[0].expectedValue);
+          assert.strictEqual(testValues[0].resultValue, testValues[0].expectedValue, "Expected value found");
         });
       });
     after(`Teardown test environment and shutdown ${host}`, async function () {
