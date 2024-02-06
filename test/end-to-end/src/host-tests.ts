@@ -29,7 +29,7 @@ export const testExcelEnd2End = async (testServerPort: number): Promise<void> =>
       Promise.resolve();
     });
   } catch (error) {
-    testHelpers.addTestResult(testValues, "output-message", error, "");
+    testHelpers.addTestResult(testValues, "output-message", getErrorMessage(error), "");
     await sendTestResults(testValues, testServerPort);
     testValues.pop();
     Promise.reject();
@@ -58,7 +58,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
       Promise.resolve();
     });
   } catch (error) {
-    testHelpers.addTestResult(testValues, "output-message", error, "");
+    testHelpers.addTestResult(testValues, "output-message", getErrorMessage(error), "");
     await sendTestResults(testValues, testServerPort);
     testValues.pop();
     Promise.reject();
@@ -85,9 +85,28 @@ export const testWordEnd2End = async (testServerPort: number): Promise<void> => 
       Promise.resolve();
     });
   } catch (error) {
-    testHelpers.addTestResult(testValues, "output-message", error, "");
+    testHelpers.addTestResult(testValues, "output-message", getErrorMessage(error), "");
     await sendTestResults(testValues, testServerPort);
     testValues.pop();
     Promise.reject();
+  }
+};
+
+const getErrorMessage = (error: any): string => {
+  if (error instanceof Error) {
+    let message;
+    if ("name" in error) {
+      message = error.name + ": ";
+    }
+    if ("message" in error) {
+      message += error.message + "\n";
+    }
+    if ("stack" in error) {
+      message += error.stack;
+    }
+
+    return message;
+  } else {
+    return error;
   }
 };
