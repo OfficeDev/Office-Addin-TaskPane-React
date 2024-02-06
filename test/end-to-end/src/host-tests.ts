@@ -29,7 +29,7 @@ export const testExcelEnd2End = async (testServerPort: number): Promise<void> =>
       Promise.resolve();
     });
   } catch (error) {
-    testHelpers.addTestResult(testValues, "output-message", error.message, "");
+    testHelpers.addTestResult(testValues, "output-message", error, "");
     await sendTestResults(testValues, testServerPort);
     testValues.pop();
     Promise.reject();
@@ -58,7 +58,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
       Promise.resolve();
     });
   } catch (error) {
-    testHelpers.addTestResult(testValues, "output-message", error.message, "");
+    testHelpers.addTestResult(testValues, "output-message", error, "");
     await sendTestResults(testValues, testServerPort);
     testValues.pop();
     Promise.reject();
@@ -85,7 +85,7 @@ export const testWordEnd2End = async (testServerPort: number): Promise<void> => 
       Promise.resolve();
     });
   } catch (error) {
-    testHelpers.addTestResult(testValues, "output-message", error.message, "");
+    testHelpers.addTestResult(testValues, "output-message", error, "");
     await sendTestResults(testValues, testServerPort);
     testValues.pop();
     Promise.reject();
