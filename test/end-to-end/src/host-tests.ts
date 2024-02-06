@@ -94,18 +94,11 @@ export const testWordEnd2End = async (testServerPort: number): Promise<void> => 
 
 const getErrorMessage = (error: any): string => {
   if (error instanceof Error) {
-    let message = "";
-    if ("name" in error) {
-      message += "NAME: " + error.name + "\n";
-    }
-    if ("message" in error) {
-      message += "MESSAGE: " + error.message + "\n";
-    }
     if ("stack" in error) {
-      message += "STACK: " + error.stack;
+      return error.stack;
+    } else {
+      return `${error.name}: ${error.message}`;
     }
-
-    return message;
   } else {
     return error;
   }
