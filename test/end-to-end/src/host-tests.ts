@@ -45,12 +45,22 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
 
     // Get output of executed taskpane code
     await PowerPoint.run(async (context: PowerPoint.RequestContext) => {
+      let selectedText = "";
+
       // get text from selected text shape
       const shapes = context.presentation.getSelectedShapes();
-      const shape = shapes.getItemAt(0);
-      const textRange = shape.textFrame.textRange.load("text");
+      shapes.load("items");
       await context.sync();
-      const selectedText = textRange.text;
+      if (!shapes) {
+        selectedText = "No shapes object";
+      } else if (shapes.items.length === 0) {
+        selectedText = "No shapes selected";
+      } else {
+        const shape = shapes.getItemAt(0);
+        const textRange = shape.textFrame.textRange.load("text");
+        await context.sync();
+        selectedText = textRange.text;
+      }
 
       // send test results
       testHelpers.addTestResult(testValues, "output-message", selectedText, "Hello PowerPoint End2End Test");

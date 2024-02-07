@@ -1,0 +1,16 @@
+{
+  "code": "GeneralException",
+  "message": "GeneralException",
+  "errorLocation": "Body.insertParagraph",
+  "statement": "var insertParagraph = body.insertParagraph(...);",
+  "surroundingStatements": [
+    "var root = context.root;",
+    "var body = root.body;",
+    "// Instantiate {body}",
+    "// >>>>>",
+    "var insertParagraph = body.insertParagraph(...);",
+    "// <<<<<",
+    "// Instantiate {insertParagraph}"
+  ],
+  "fullStatements": ["Please enable config.extendedErrorLogging to see full statements."]
+}
