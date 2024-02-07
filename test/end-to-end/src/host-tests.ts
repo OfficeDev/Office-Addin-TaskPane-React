@@ -39,6 +39,7 @@ export const testExcelEnd2End = async (testServerPort: number): Promise<void> =>
 export const testPowerPointEnd2End = async (testServerPort: number): Promise<void> => {
   try {
     // Execute taskpane code
+    await testHelpers.sleep(10000);
     await insertPowerPointText("Hello PowerPoint End2End Test");
     await testHelpers.sleep(2000);
 
@@ -47,9 +48,9 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
       // get text from selected text shape
       const shapes = context.presentation.getSelectedShapes();
       const shape = shapes.getItemAt(0);
-      shape.textFrame.textRange.load("text");
+      const textRange = shape.textFrame.textRange.load("text");
       await context.sync();
-      const selectedText = shape.textFrame.textRange.text;
+      const selectedText = textRange.text;
 
       // send test results
       testHelpers.addTestResult(testValues, "output-message", selectedText, "Hello PowerPoint End2End Test");
@@ -68,6 +69,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
 export const testWordEnd2End = async (testServerPort: number): Promise<void> => {
   try {
     // Execute taskpane code
+    await testHelpers.sleep(10000);
     await insertWordText("Hello Word End2End Test");
     await testHelpers.sleep(2000);
 
