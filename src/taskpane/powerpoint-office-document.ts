@@ -7,7 +7,7 @@ const insertText = async (text: string) => {
     { coercionType: Office.CoercionType.Text },
     (asyncResult: Office.AsyncResult<void>) => {
       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-        throw asyncResult.error;
+        Promise.reject(asyncResult.error);
       }
     }
   );
