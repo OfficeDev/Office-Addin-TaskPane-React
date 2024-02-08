@@ -41,7 +41,7 @@ export const testPowerPointEnd2End = async (testServerPort: number): Promise<voi
     // Execute taskpane code
     await testHelpers.sleep(10000);
     await insertPowerPointText("Hello PowerPoint End2End Test");
-    await testHelpers.sleep(2000);
+    await testHelpers.sleep(10000);
 
     // Get output of executed taskpane code
     await PowerPoint.run(async (context: PowerPoint.RequestContext) => {
@@ -81,7 +81,7 @@ export const testWordEnd2End = async (testServerPort: number): Promise<void> => 
     // Execute taskpane code
     await testHelpers.sleep(10000);
     await insertWordText("Hello Word End2End Test");
-    await testHelpers.sleep(2000);
+    await testHelpers.sleep(10000);
 
     // Get output of executed taskpane code
     await Word.run(async (context) => {
