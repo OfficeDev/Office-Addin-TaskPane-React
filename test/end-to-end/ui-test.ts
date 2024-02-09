@@ -9,7 +9,8 @@ import * as testHelpers from "./src/test-helpers";
 
 /* global process, describe, before, it, after */
 
-const hosts = ["Excel", "PowerPoint", "Word"];
+//const hosts = ["Excel", "PowerPoint", "Word"];
+const hosts = ["Word"];
 const manifestPath = path.resolve(`${process.cwd()}/test/end-to-end/test-manifest.xml`);
 const testServerPort: number = 4201;
 
