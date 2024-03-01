@@ -39,11 +39,6 @@
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" />
   </Rule>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
-    <!-- The <Hosts> element is required for validation, but it is ignored when there there is a child <VersionOverrides> element of type VersionOverridesV1_1 with its own <Hosts> element. -->
-    <Hosts>
-      <Host xsi:type="MailHost">
-      </Host>
-    </Hosts>
     <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
       <Requirements>
         <bt:Sets DefaultMinVersion="1.3">
