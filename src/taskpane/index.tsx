@@ -7,14 +7,14 @@ import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 
 const title = "Contoso Task Pane Add-in";
 
-const rootElement: HTMLElement = document.getElementById("container");
-const root = createRoot(rootElement);
+const rootElement: HTMLElement | null = document.getElementById("container");
+const root = rootElement ? createRoot(rootElement) : undefined;
 
 /* Render application after Office initializes */
-Office.onReady(() => {
-  root.render(
+Office.onReady((info) => {
+  root?.render(
     <FluentProvider theme={webLightTheme}>
-      <App title={title} />
+      <App host={info.host} title={title} />
     </FluentProvider>
   );
 });
@@ -22,6 +22,6 @@ Office.onReady(() => {
 if ((module as any).hot) {
   (module as any).hot.accept("./components/App", () => {
     const NextApp = require("./components/App").default;
-    root.render(NextApp);
+    root?.render(NextApp);
   });
 }

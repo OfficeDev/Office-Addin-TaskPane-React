@@ -1,6 +1,6 @@
-import { default as insertExcelText } from "../../../src/taskpane/excel-office-document";
-import { default as insertPowerPointText } from "../../../src/taskpane/powerpoint-office-document";
-import { default as insertWordText } from "../../../src/taskpane/word-office-document";
+import { insertText as insertExcelText } from "../../../src/taskpane/excel";
+import { insertText as insertPowerPointText } from "../../../src/taskpane/powerpoint";
+import { insertText as insertWordText } from "../../../src/taskpane/word";
 import * as testHelpers from "./test-helpers";
 import { sendTestResults } from "office-addin-test-helpers";
 
