@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* global require, process, console */
 
 const fs = require("fs");
@@ -42,32 +43,14 @@ async function convertProjectToSingleHost(host) {
 
   // Copy host-specific office-document.ts over src/office-document.ts
   const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/${hostName}-office-document.ts`, "utf8");
-  await writeFileAsync(`./src/taskpane/office-document.ts`, srcContent);
-
-  // Remove code from the TextInsertion component that is needed only for tests or
-  // that is host-specific.
-  const originalTextInsertionComponentContent = await readFileAsync(
-    `./src/taskpane/components/TextInsertion.tsx`,
-    "utf8"
-  );
-  let updatedTextInsertionComponentContent = originalTextInsertionComponentContent.replace(
-    `import { selectInsertionByHost } from "../../host-relative-text-insertion";`,
-    `import insertText from "../office-document";`
-  );
-  updatedTextInsertionComponentContent = updatedTextInsertionComponentContent.replace(
-    `const insertText = await selectInsertionByHost();`,
-    ``
-  );
-  await writeFileAsync(`./src/taskpane/components/TextInsertion.tsx`, updatedTextInsertionComponentContent);
+  const srcContent = await readFileAsync(`./src/taskpane/${hostName}.ts`, "utf8");
+  await writeFileAsync(`./src/taskpane/taskpane.ts`, srcContent);
 
   // Delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}-office-document.ts`);
+    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}.ts`);
   });
-
-  await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
 
   // Delete test folder
   deleteFolder(path.resolve(`./test`));
