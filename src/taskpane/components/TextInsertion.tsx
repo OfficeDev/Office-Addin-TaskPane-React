@@ -2,11 +2,8 @@ import * as React from "react";
 import { useState } from "react";
 import { Button, Field, Textarea, tokens, makeStyles } from "@fluentui/react-components";
 
-/* global Office */
-
 interface TextInsertionProps {
-  host: Office.HostType;
-  insertText: (host: Office.HostType, text: string) => void;
+  insertText: (text: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -30,11 +27,10 @@ const useStyles = makeStyles({
 });
 
 const TextInsertion: React.FC<TextInsertionProps> = (props: TextInsertionProps) => {
-  const host = props.host;
   const [text, setText] = useState<string>("Some text.");
 
   const handleTextInsertion = async () => {
-    await props.insertText(host, text);
+    await props.insertText(text);
   };
 
   const handleTextChange = async (event: React.ChangeEvent<HTMLTextAreaElement>) => {

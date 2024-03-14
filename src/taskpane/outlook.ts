@@ -1,6 +1,6 @@
 /* global Office console */
 
-const insertText = async (text: string) => {
+export async function insertText(text: string) {
   // Write text to the cursor point in the compose surface.
   try {
     Office.context.mailbox.item?.body.setSelectedDataAsync(
@@ -15,6 +15,6 @@ const insertText = async (text: string) => {
   } catch (error) {
     console.log("Error: " + error);
   }
-};
+}
 
 export default insertText;
