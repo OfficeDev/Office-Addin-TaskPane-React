@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import insertText from "../../src/taskpane/excel-office-document";
+import { insertText } from "../../src/taskpane/excel";
 
 /* global describe, global, it */
 
@@ -12,7 +12,7 @@ const ExcelMockData = {
         range: {
           values: [[" "]],
           format: {
-            autoFitColumns: function () { }
+            autoFitColumns: function () {},
           },
         },
         getRange: function () {
@@ -20,9 +20,9 @@ const ExcelMockData = {
         },
         getActiveWorksheet: function () {
           return this;
-        }
-      }
-    }
+        },
+      },
+    },
   },
   run: async function (callback) {
     await callback(this.context);
@@ -39,6 +39,6 @@ describe("Excel", function () {
     excelMock.context.workbook.worksheets.range.load("values");
     await excelMock.context.sync();
 
-   assert.strictEqual(excelMock.context.workbook.worksheets.range.values[0][0], "Hello Excel");
+    assert.strictEqual(excelMock.context.workbook.worksheets.range.values[0][0], "Hello Excel");
   });
 });

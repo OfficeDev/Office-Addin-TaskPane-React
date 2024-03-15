@@ -16,12 +16,12 @@ const root = createRoot(rootElement);
 
 /* Render application after Office initializes */
 Office.onReady(async (info) => {
-  const testServerResponse: object = await pingTestServer(port);
-  if (testServerResponse["status"] == 200) {
+  const testServerResponse: { status?: number } = await pingTestServer(port);
+  if (testServerResponse?.status === 200) {
     //render(App);
     root.render(
       <FluentProvider theme={webLightTheme}>
-        <App title={title} />
+        <App host={info.host} title={title} />
       </FluentProvider>
     );
 

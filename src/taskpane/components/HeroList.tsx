@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   },
 });
 
-const HeroList = (props: HeroListProps) => {
+const HeroList: React.FC<HeroListProps> = (props: HeroListProps) => {
   const { items, message } = props;
   const styles = useStyles();
 

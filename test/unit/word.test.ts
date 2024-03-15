@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import { OfficeMockObject } from "office-addin-mock";
-import insertText from "../../src/taskpane/word-office-document";
+import { insertText } from "../../src/taskpane/word";
 
 /* global describe, global, it, Word */
 
@@ -38,6 +38,6 @@ describe("Word", function () {
     wordMock.context.document.body.paragraph.load("text");
     await wordMock.context.sync();
 
-    assert.strictEqual(wordMock.context.document.body.paragraph.text,"Hello Word");
-   });
+    assert.strictEqual(wordMock.context.document.body.paragraph.text, "Hello Word");
+  });
 });

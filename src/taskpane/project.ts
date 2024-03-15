@@ -1,6 +1,6 @@
 /* global Office console */
 
-const insertText = async (text: string) => {
+export async function insertText(text: string) {
   // Write text to the task notes field.
   try {
     // Get the GUID of the selected task
@@ -38,6 +38,6 @@ const insertText = async (text: string) => {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
 export default insertText;
