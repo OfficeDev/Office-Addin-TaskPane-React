@@ -120,7 +120,7 @@ async function updatePackageJsonForSingleHost(host) {
 }
 
 async function updateLaunchJsonFile(host) {
-  // Remove uneeded configuration from launch.json
+  // Remove unneeded configuration from launch.json
   const launchJson = `.vscode/launch.json`;
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
   let content = JSON.parse(launchJsonContent);
