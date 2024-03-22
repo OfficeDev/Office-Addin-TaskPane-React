@@ -32,7 +32,7 @@ async function modifyProjectForSingleHost(host) {
   }
   await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
-  await updateLaunchJsonFile();
+  await updateLaunchJsonFile(host);
 }
 
 async function convertProjectToSingleHost(host) {
@@ -119,13 +119,15 @@ async function updatePackageJsonForSingleHost(host) {
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
-async function updateLaunchJsonFile() {
-  // Remove 'Debug Tests' configuration from launch.json
+async function updateLaunchJsonFile(host) {
+  // Remove uneeded configuration from launch.json
   const launchJson = `.vscode/launch.json`;
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
-  const regex = /(.+{\r?\n.*"name": "Debug (?:UI|Unit) Tests",\r?\n(?:.*\r?\n)*?.*},.*\r?\n)/gm;
-  const updatedContent = launchJsonContent.replace(regex, "");
-  await writeFileAsync(launchJson, updatedContent);
+  let content = JSON.parse(launchJsonContent);
+  content.configurations = content.configurations.filter(function (config) {
+    return config.name.startsWith(getHostName(host));
+  });
+  await writeFileAsync(launchJson, JSON.stringify(content, null, 2));
 }
 
 function getHostName(host) {
@@ -190,10 +192,6 @@ async function updatePackageJsonForXMLManifest() {
   const packageJson = `./package.json`;
   const data = await readFileAsync(packageJson, "utf8");
   let content = JSON.parse(data);
-
-  // Remove scripts that are only used with JSON manifest
-  delete content.scripts["signin"];
-  delete content.scripts["signout"];
 
   // Write updated JSON to file
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
