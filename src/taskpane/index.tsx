@@ -11,10 +11,10 @@ const rootElement: HTMLElement | null = document.getElementById("container");
 const root = rootElement ? createRoot(rootElement) : undefined;
 
 /* Render application after Office initializes */
-Office.onReady((info) => {
+Office.onReady(() => {
   root?.render(
     <FluentProvider theme={webLightTheme}>
-      <App host={info.host} title={title} />
+      <App title={title} />
     </FluentProvider>
   );
 });

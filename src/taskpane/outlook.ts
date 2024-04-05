@@ -16,5 +16,3 @@ export async function insertText(text: string) {
     console.log("Error: " + error);
   }
 }
-
-export default insertText;
