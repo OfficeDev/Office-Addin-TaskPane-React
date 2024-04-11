@@ -280,18 +280,17 @@ modifyProjectForSingleHost(host).catch((err) => {
 
 let manifestPath = "manifest.xml";
 
-// Uncomment when this template supports JSON manifest
-// if (host !== "outlook" || manifestType !== "json") {
+if (host !== "outlook" || manifestType !== "json") {
 // Remove things that are only relevant to JSON manifest
 deleteJSONManifestRelatedFiles();
 updatePackageJsonForXMLManifest();
-// } else {
-//   manifestPath = "manifest.json";
-//   modifyProjectForJSONManifest().catch((err) => {
-//     console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
-//     process.exitCode = 1;
-//   });
-// }
+} else {
+  manifestPath = "manifest.json";
+  modifyProjectForJSONManifest().catch((err) => {
+    console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
+    process.exitCode = 1;
+  });
+}
 
 if (projectName) {
   if (!appId) {
