@@ -21,7 +21,7 @@ Office.onReady(async (info) => {
     //render(App);
     root.render(
       <FluentProvider theme={webLightTheme}>
-        <App host={info.host} title={title} />
+        <App title={title} />
       </FluentProvider>
     );
 
