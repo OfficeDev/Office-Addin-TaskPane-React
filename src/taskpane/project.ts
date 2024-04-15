@@ -28,7 +28,7 @@ export async function insertText(text: string) {
               } else {
                 console.log(result.error);
               }
-            }
+            },
           );
         }
       } else {

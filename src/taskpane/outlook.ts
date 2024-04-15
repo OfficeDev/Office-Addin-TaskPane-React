@@ -10,7 +10,7 @@ export async function insertText(text: string) {
         if (asyncResult.status === Office.AsyncResultStatus.Failed) {
           throw asyncResult.error.message;
         }
-      }
+      },
     );
   } catch (error) {
     console.log("Error: " + error);
