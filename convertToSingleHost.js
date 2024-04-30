@@ -263,18 +263,17 @@ modifyProjectForSingleHost(host).catch((err) => {
 
 let manifestPath = "manifest.xml";
 
-// Uncomment when this template supports JSON manifest
-// if (host !== "outlook" || manifestType !== "json") {
+if (host !== "outlook" || manifestType !== "json") {
 // Remove things that are only relevant to JSON manifest
 deleteJSONManifestRelatedFiles();
 updatePackageJsonForXMLManifest();
-// } else {
-//   manifestPath = "manifest.json";
-//   modifyProjectForJSONManifest().catch((err) => {
-//     console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
-//     process.exitCode = 1;
-//   });
-// }
+} else {
+  manifestPath = "manifest.json";
+  modifyProjectForJSONManifest().catch((err) => {
+    console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
+    process.exitCode = 1;
+  });
+}
 
 if (projectName) {
   if (!appId) {
@@ -282,7 +281,7 @@ if (projectName) {
   }
 
   // Modify the manifest to include the name and id of the project
-  const cmdLine = `npx office-addin-manifest modify ${manifestPath} -g ${appId} -d ${projectName}`;
+  const cmdLine = `npx office-addin-manifest modify ${manifestPath} -g ${appId} -d "${projectName}"`;
   childProcess.exec(cmdLine, (error, stdout) => {
     if (error) {
       Promise.reject(stdout);

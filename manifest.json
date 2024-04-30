@@ -30,7 +30,7 @@
       "permissions": {
         "resourceSpecific": [
           {
-            "name": "MailboxItem.Read.User",
+            "name": "Mailbox.ReadWrite.User",
             "type": "Delegated"
           }
         ]
@@ -87,14 +87,14 @@
         "ribbons": [
           {
             "contexts": [
-              "mailRead"
+              "mailCompose"
             ],
             "tabs": [
               {
                 "builtInTabId": "TabDefault",
                 "groups": [
                   {
-                    "id": "msgReadGroup",
+                    "id": "msgComposeGroup",
                     "label": "Contoso Add-in",
                     "icons": [
                       { "size": 16, "url": "https://localhost:3000/assets/icon-16.png" },
@@ -103,7 +103,7 @@
                     ],
                     "controls": [
                       {
-                        "id": "msgReadOpenPaneButton",
+                        "id": "msgComposeOpenPaneButton",
                         "type": "button",
                         "label": "Show Taskpane",
                         "icons": [
@@ -113,7 +113,7 @@
                         ],
                         "supertip": {
                           "title": "Show Taskpane",
-                          "description": "Opens a pane displaying all available properties."
+                          "description": "Opens a task pane."
                         },
                         "actionId": "TaskPaneRuntimeShow"
                       },
