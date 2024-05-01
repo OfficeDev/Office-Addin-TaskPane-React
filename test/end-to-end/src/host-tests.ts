@@ -1,6 +1,6 @@
-import { default as insertExcelText } from "../../../src/taskpane/excel-office-document";
-import { default as insertPowerPointText } from "../../../src/taskpane/powerpoint-office-document";
-import { default as insertWordText } from "../../../src/taskpane/word-office-document";
+import { insertText as insertExcelText } from "../../../src/taskpane/excel";
+import { insertText as insertPowerPointText } from "../../../src/taskpane/powerpoint";
+import { insertText as insertWordText } from "../../../src/taskpane/word";
 import * as testHelpers from "./test-helpers";
 import { sendTestResults } from "office-addin-test-helpers";
 
@@ -38,21 +38,25 @@ export const testExcelEnd2End = async (testServerPort: number): Promise<void> =>
 
 export const testPowerPointEnd2End = async (testServerPort: number): Promise<void> => {
   try {
+    const textToInsert = "Hello PowerPoint End2End Test";
+
     // Execute taskpane code
-    await insertPowerPointText("Hello PowerPoint End2End Test");
+    await insertPowerPointText(textToInsert);
     await testHelpers.sleep(2000);
 
     // Get output of executed taskpane code
     PowerPoint.run(async (context: PowerPoint.RequestContext) => {
-      // get text from selected text shape
-      const shapes = context.presentation.getSelectedShapes();
-      const shape = shapes.getItemAt(0);
-      const textRange = shape.textFrame.textRange.load("text");
+      // get text from inserted text shape
+      const slide = context.presentation.getSelectedSlides().getItemAt(0);
+      // eslint-disable-next-line office-addins/load-object-before-read, office-addins/call-sync-before-read
+      const shapes = slide.shapes;
+      slide.shapes.load(["textFrame/textRange/text"]);
       await context.sync();
-      const selectedText = textRange.text;
+      const shape = shapes.items[shapes.items.length - 1];
+      const text = shape.textFrame.textRange.text;
 
       // send test results
-      testHelpers.addTestResult(testValues, "output-message", selectedText, "Hello PowerPoint End2End Test");
+      testHelpers.addTestResult(testValues, "output-message", text, textToInsert);
       await sendTestResults(testValues, testServerPort);
       testValues.pop();
       Promise.resolve();

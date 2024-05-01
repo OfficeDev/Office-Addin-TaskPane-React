@@ -12,7 +12,6 @@ async function getHttpsOptions() {
 }
 
 module.exports = async (env, options) => {
-
   const config = {
     devtool: "source-map",
     entry: {
