@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* global require, process, console */
 
 const fs = require("fs");
@@ -32,7 +33,7 @@ async function modifyProjectForSingleHost(host) {
   }
   await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
-  await updateLaunchJsonFile();
+  await updateLaunchJsonFile(host);
 }
 
 async function convertProjectToSingleHost(host) {
@@ -42,32 +43,14 @@ async function convertProjectToSingleHost(host) {
 
   // Copy host-specific office-document.ts over src/office-document.ts
   const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/${hostName}-office-document.ts`, "utf8");
-  await writeFileAsync(`./src/taskpane/office-document.ts`, srcContent);
-
-  // Remove code from the TextInsertion component that is needed only for tests or
-  // that is host-specific.
-  const originalTextInsertionComponentContent = await readFileAsync(
-    `./src/taskpane/components/TextInsertion.tsx`,
-    "utf8"
-  );
-  let updatedTextInsertionComponentContent = originalTextInsertionComponentContent.replace(
-    `import { selectInsertionByHost } from "../../host-relative-text-insertion";`,
-    `import insertText from "../office-document";`
-  );
-  updatedTextInsertionComponentContent = updatedTextInsertionComponentContent.replace(
-    `const insertText = await selectInsertionByHost();`,
-    ``
-  );
-  await writeFileAsync(`./src/taskpane/components/TextInsertion.tsx`, updatedTextInsertionComponentContent);
+  const srcContent = await readFileAsync(`./src/taskpane/${hostName}.ts`, "utf8");
+  await writeFileAsync(`./src/taskpane/taskpane.ts`, srcContent);
 
   // Delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}-office-document.ts`);
+    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}.ts`);
   });
-
-  await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
 
   // Delete test folder
   deleteFolder(path.resolve(`./test`));
@@ -119,13 +102,15 @@ async function updatePackageJsonForSingleHost(host) {
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
-async function updateLaunchJsonFile() {
-  // Remove 'Debug Tests' configuration from launch.json
+async function updateLaunchJsonFile(host) {
+  // Remove unneeded configuration from launch.json
   const launchJson = `.vscode/launch.json`;
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
-  const regex = /(.+{\r?\n.*"name": "Debug (?:UI|Unit) Tests",\r?\n(?:.*\r?\n)*?.*},.*\r?\n)/gm;
-  const updatedContent = launchJsonContent.replace(regex, "");
-  await writeFileAsync(launchJson, updatedContent);
+  let content = JSON.parse(launchJsonContent);
+  content.configurations = content.configurations.filter(function (config) {
+    return config.name.startsWith(getHostName(host));
+  });
+  await writeFileAsync(launchJson, JSON.stringify(content, null, 2));
 }
 
 function getHostName(host) {
@@ -190,10 +175,6 @@ async function updatePackageJsonForXMLManifest() {
   const packageJson = `./package.json`;
   const data = await readFileAsync(packageJson, "utf8");
   let content = JSON.parse(data);
-
-  // Remove scripts that are only used with JSON manifest
-  delete content.scripts["signin"];
-  delete content.scripts["signout"];
 
   // Write updated JSON to file
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
@@ -282,18 +263,17 @@ modifyProjectForSingleHost(host).catch((err) => {
 
 let manifestPath = "manifest.xml";
 
-// Uncomment when this template supports JSON manifest
-// if (host !== "outlook" || manifestType !== "json") {
+if (host !== "outlook" || manifestType !== "json") {
 // Remove things that are only relevant to JSON manifest
 deleteJSONManifestRelatedFiles();
 updatePackageJsonForXMLManifest();
-// } else {
-//   manifestPath = "manifest.json";
-//   modifyProjectForJSONManifest().catch((err) => {
-//     console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
-//     process.exitCode = 1;
-//   });
-// }
+} else {
+  manifestPath = "manifest.json";
+  modifyProjectForJSONManifest().catch((err) => {
+    console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
+    process.exitCode = 1;
+  });
+}
 
 if (projectName) {
   if (!appId) {
@@ -301,7 +281,7 @@ if (projectName) {
   }
 
   // Modify the manifest to include the name and id of the project
-  const cmdLine = `npx office-addin-manifest modify ${manifestPath} -g ${appId} -d ${projectName}`;
+  const cmdLine = `npx office-addin-manifest modify ${manifestPath} -g ${appId} -d "${projectName}"`;
   childProcess.exec(cmdLine, (error, stdout) => {
     if (error) {
       Promise.reject(stdout);
