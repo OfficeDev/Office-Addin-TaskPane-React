@@ -1,10 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* global require, process, console */
 
 const fs = require("fs");
-const host = process.argv[2];
-const hosts = ["excel", "onenote", "outlook", "powerpoint", "project", "word"];
 const path = require("path");
 const util = require("util");
+const childProcess = require("child_process");
+const hosts = ["excel", "onenote", "outlook", "powerpoint", "project", "word"];
+
+if (process.argv.length <= 2) {
+  const hostList = hosts.map((host) => `'${host}'`).join(", ");
+  console.log("SYNTAX: convertToSingleHost.js <host> <manifestType> <projectName> <appId>");
+  console.log();
+  console.log(`  host (required): Specifies which Office app will host the add-in: ${hostList}`);
+  console.log(`  manifestType: Specify the type of manifest to use: 'xml' or 'json'.  Defaults to 'xml'`);
+  console.log(`  projectName: The name of the project (use quotes when there are spaces in the name). Defaults to 'My Office Add-in'`);
+  console.log(`  appId: The id of the project or 'random' to generate one.  Defaults to 'random'`);
+  console.log();
+  process.exit(1);
+}
+
+const host = process.argv[2];
+const manifestType = process.argv[3];
+const projectName = process.argv[4];
+let appId = process.argv[5];
 const testPackages = [
   "@types/mocha",
   "@types/node",
@@ -27,7 +45,7 @@ async function modifyProjectForSingleHost(host) {
   }
   await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
-  await updateLaunchJsonFile();
+  await updateLaunchJsonFile(host);
 }
 
 async function convertProjectToSingleHost(host) {
@@ -37,32 +55,18 @@ async function convertProjectToSingleHost(host) {
 
   // Copy host-specific office-document.ts over src/office-document.ts
   const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/${hostName}-office-document.ts`, 'utf8');
-  await writeFileAsync(`./src/taskpane/office-document.ts`, srcContent);  
-
-  // Remove code from the TextInsertion component that is needed only for tests or
-  // that is host-specific.
-  const originalTextInsertionComponentContent = await readFileAsync(`./src/taskpane/components/TextInsertion.tsx`, "utf8");
-  let updatedTextInsertionComponentContent = originalTextInsertionComponentContent.replace(
-    `import { selectInsertionByHost } from "../../host-relative-text-insertion";`, 
-    `import insertText from "../office-document";`
-  );
-  updatedTextInsertionComponentContent = updatedTextInsertionComponentContent.replace(
-    `const insertText = await selectInsertionByHost();`, 
-    ``
-  );
-  await writeFileAsync(`./src/taskpane/components/TextInsertion.tsx`, updatedTextInsertionComponentContent);
+  const srcContent = await readFileAsync(`./src/taskpane/${hostName}.ts`, "utf8");
+  await writeFileAsync(`./src/taskpane/taskpane.ts`, srcContent);
 
   // Delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}-office-document.ts`);
+    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}.ts`);
   });
-  
-  await unlinkFileAsync(`./src/host-relative-text-insertion.ts`);
 
+  // Delete test folder
   deleteFolder(path.resolve(`./test`));
-  
+
   // Delete the .github folder
   deleteFolder(path.resolve(`./.github`));
 
@@ -87,10 +91,7 @@ async function updatePackageJsonForSingleHost(host) {
 
   // Remove scripts that are unrelated to the selected host
   Object.keys(content.scripts).forEach(function (key) {
-    if (
-      key === "convert-to-single-host" ||
-      key === "start:desktop:outlook"
-    ) {
+    if (key === "convert-to-single-host" || key === "start:desktop:outlook") {
       delete content.scripts[key];
     }
   });
@@ -109,29 +110,31 @@ async function updatePackageJsonForSingleHost(host) {
     }
   });
 
-  // Write updated json to file
+  // Write updated JSON to file
   await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
 }
 
-async function updateLaunchJsonFile() {
-  // Remove 'Debug Tests' configuration from launch.json
+async function updateLaunchJsonFile(host) {
+  // Remove unneeded configuration from launch.json
   const launchJson = `.vscode/launch.json`;
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
-  const regex = /(.+{\r?\n.*"name": "Debug (?:UI|Unit) Tests",\r?\n(?:.*\r?\n)*?.*},.*\r?\n)/gm;
-  const updatedContent = launchJsonContent.replace(regex, "");
-  await writeFileAsync(launchJson, updatedContent);
+  let content = JSON.parse(launchJsonContent);
+  content.configurations = content.configurations.filter(function (config) {
+    return config.name.startsWith(getHostName(host));
+  });
+  await writeFileAsync(launchJson, JSON.stringify(content, null, 2));
 }
 
 function getHostName(host) {
-  switch(host) {
+  switch (host) {
     case "excel":
       return "Excel";
     case "onenote":
       return "OneNote";
     case "outlook":
-      return "Outlook"
+      return "Outlook";
     case "powerpoint":
-      return "PowerPoint";    
+      return "PowerPoint";
     case "project":
       return "Project";
     case "word":
@@ -170,11 +173,132 @@ async function deleteSupportFiles() {
   await unlinkFileAsync("package-lock.json");
 }
 
+async function deleteJSONManifestRelatedFiles() {
+  await unlinkFileAsync("manifest.json");
+  await unlinkFileAsync("assets/color.png");
+  await unlinkFileAsync("assets/outline.png");
+}
+
+async function deleteXMLManifestRelatedFiles() {
+  await unlinkFileAsync("manifest.xml");
+}
+
+async function updatePackageJsonForXMLManifest() {
+  const packageJson = `./package.json`;
+  const data = await readFileAsync(packageJson, "utf8");
+  let content = JSON.parse(data);
+
+  // Write updated JSON to file
+  await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
+}
+
+async function updatePackageJsonForJSONManifest() {
+  const packageJson = `./package.json`;
+  const data = await readFileAsync(packageJson, "utf8");
+  let content = JSON.parse(data);
+
+  // Remove special start scripts
+  Object.keys(content.scripts).forEach(function (key) {
+    if (key.includes("start:")) {
+      delete content.scripts[key];
+    }
+  });
+
+  // Change manifest file name extension
+  content.scripts.start = "office-addin-debugging start manifest.json";
+  content.scripts.stop = "office-addin-debugging stop manifest.json";
+  content.scripts.validate = "office-addin-manifest validate manifest.json";
+
+  // Write updated JSON to file
+  await writeFileAsync(packageJson, JSON.stringify(content, null, 2));
+}
+
+async function updateTasksJsonFileForJSONManifest() {
+  const tasksJson = `.vscode/tasks.json`;
+  const data = await readFileAsync(tasksJson, "utf8");
+  let content = JSON.parse(data);
+
+  content.tasks.forEach(function (task) {
+    if (task.label.startsWith("Build")) {
+      task.dependsOn = ["Install"];
+    }
+    if (task.label === "Debug: Outlook Desktop") {
+      task.script = "start";
+      task.dependsOn = ["Check OS", "Install"];
+    }
+  });
+
+  const checkOSTask = {
+    label: "Check OS",
+    type: "shell",
+    windows: {
+      command: "echo 'Sideloading in Outlook on Windows is supported'",
+    },
+    linux: {
+      command: "echo 'Sideloading on Linux is not supported' && exit 1",
+    },
+    osx: {
+      command: "echo 'Sideloading in Outlook on Mac is not supported' && exit 1",
+    },
+    presentation: {
+      clear: true,
+      panel: "dedicated",
+    },
+  };
+
+  content.tasks.push(checkOSTask);
+  await writeFileAsync(tasksJson, JSON.stringify(content, null, 2));
+}
+
+async function updateWebpackConfigForJSONManifest() {
+  const webPack = `webpack.config.js`;
+  const webPackContent = await readFileAsync(webPack, "utf8");
+  const updatedContent = webPackContent.replace(".xml", ".json");
+  await writeFileAsync(webPack, updatedContent);
+}
+
+async function modifyProjectForJSONManifest() {
+  await updatePackageJsonForJSONManifest();
+  await updateWebpackConfigForJSONManifest();
+  await updateTasksJsonFileForJSONManifest();
+  await deleteXMLManifestRelatedFiles();
+}
+
 /**
  * Modify the project so that it only supports a single host.
  * @param host The host to support.
  */
 modifyProjectForSingleHost(host).catch((err) => {
-  console.error(`Error: ${err instanceof Error ? err.message : err}`);
+  console.error(`Error modifying for single host: ${err instanceof Error ? err.message : err}`);
   process.exitCode = 1;
 });
+
+let manifestPath = "manifest.xml";
+
+if (host !== "outlook" || manifestType !== "json") {
+// Remove things that are only relevant to JSON manifest
+deleteJSONManifestRelatedFiles();
+updatePackageJsonForXMLManifest();
+} else {
+  manifestPath = "manifest.json";
+  modifyProjectForJSONManifest().catch((err) => {
+    console.error(`Error modifying for JSON manifest: ${err instanceof Error ? err.message : err}`);
+    process.exitCode = 1;
+  });
+}
+
+if (projectName) {
+  if (!appId) {
+    appId = "random";
+  }
+
+  // Modify the manifest to include the name and id of the project
+  const cmdLine = `npx office-addin-manifest modify ${manifestPath} -g ${appId} -d "${projectName}"`;
+  childProcess.exec(cmdLine, (error, stdout) => {
+    if (error) {
+      Promise.reject(stdout);
+    } else {
+      Promise.resolve();
+    }
+  });
+}

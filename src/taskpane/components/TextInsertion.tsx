@@ -1,7 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Field, Textarea, tokens, makeStyles } from "@fluentui/react-components";
-import { selectInsertionByHost } from "../../host-relative-text-insertion";
+
+/* global HTMLTextAreaElement */
+
+interface TextInsertionProps {
+  insertText: (text: string) => void;
+}
 
 const useStyles = makeStyles({
   instructions: {
@@ -23,12 +28,11 @@ const useStyles = makeStyles({
   },
 });
 
-const TextInsertion: React.FC = () => {
+const TextInsertion: React.FC<TextInsertionProps> = (props: TextInsertionProps) => {
   const [text, setText] = useState<string>("Some text.");
 
   const handleTextInsertion = async () => {
-    const insertText = await selectInsertionByHost();
-    await insertText(text);
+    await props.insertText(text);
   };
 
   const handleTextChange = async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
