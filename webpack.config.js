@@ -19,8 +19,11 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      vendor: ["react", "react-dom", "core-js", "@fluentui/react-components", "@fluentui/react-icons"],
-      taskpane: ["./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
+      react: ["react", "react-dom"],
+      taskpane: {
+        import: ["./src/taskpane/index.tsx", "./src/taskpane/taskpane.html"],
+        dependOn: "react",
+      },
       commands: "./src/commands/commands.ts",
     },
     output: {
@@ -35,7 +38,7 @@ module.exports = async (env, options) => {
           test: /\.ts$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader"
+            loader: "babel-loader",
           },
         },
         {
@@ -61,7 +64,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
-        chunks: ["polyfill", "vendor", "taskpane"],
+        chunks: ["polyfill", "taskpane", "react"],
       }),
       new CopyWebpackPlugin({
         patterns: [
