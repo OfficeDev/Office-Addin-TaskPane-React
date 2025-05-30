@@ -136,22 +136,11 @@ async function updateLaunchJsonFile(host) {
 }
 
 function getHostName(host) {
-  switch (host) {
-    case "excel":
-      return "excel";
-    case "onenote":
-      return "onenote";
-    case "outlook":
-      return "outlook";
-    case "powerpoint":
-      return "powerpoint";
-    case "project":
-      return "project";
-    case "word":
-      return "word";
-    default:
-      throw new Error(`'${host}' is not a supported host.`);
+  if (!hosts.includes(host)) {
+    throw new Error(`'${host}' is not a supported host.`);
   }
+
+  return host;
 }
 
 function deleteFolder(folder) {
