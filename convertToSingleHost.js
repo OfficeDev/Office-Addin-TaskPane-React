@@ -53,6 +53,7 @@ async function modifyProjectForSingleHost(host) {
   if (!hosts.includes(host)) {
     throw new Error(`'${host}' is not a supported host.`);
   }
+
   await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
   await updateLaunchJsonFile(host);
@@ -64,14 +65,13 @@ async function convertProjectToSingleHost(host) {
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // Copy host-specific office-document.ts over src/office-document.ts
-  const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/${hostName}.ts`, "utf8");
+  const srcContent = await readFileAsync(`./src/taskpane/${host}.ts`, "utf8");
   await writeFileAsync(`./src/taskpane/taskpane.ts`, srcContent);
 
   // Delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileSafeAsync(`./manifest.${host}.xml`);
-    await unlinkFileSafeAsync(`./src/taskpane/${getHostName(host)}.ts`);
+    await unlinkFileSafeAsync(`./src/taskpane/${host}.ts`);
   });
 
   // Delete test folder
@@ -130,17 +130,10 @@ async function updateLaunchJsonFile(host) {
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
   let content = JSON.parse(launchJsonContent);
   content.configurations = content.configurations.filter(function (config) {
-    return config.name.startsWith(getHostName(host));
+    return config.name.toLowerCase().startsWith(host);
   });
+
   await writeFileAsync(launchJson, JSON.stringify(content, null, 2));
-}
-
-function getHostName(host) {
-  if (!hosts.includes(host)) {
-    throw new Error(`'${host}' is not a supported host.`);
-  }
-
-  return host;
 }
 
 function deleteFolder(folder) {
