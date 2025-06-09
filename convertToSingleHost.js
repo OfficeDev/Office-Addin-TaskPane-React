@@ -36,16 +36,6 @@ const readFileAsync = util.promisify(fs.readFile);
 const unlinkFileAsync = util.promisify(fs.unlink);
 const writeFileAsync = util.promisify(fs.writeFile);
 
-async function unlinkFileSafeAsync(path) {
-  try {
-    await unlinkFileAsync(path)
-  } catch (error) {
-    if (error.code !== 'ENOENT') {
-      throw error;
-    }
-  }
-}
-
 async function modifyProjectForSingleHost(host) {
   if (!host) {
     throw new Error("The host was not provided.");
@@ -70,8 +60,8 @@ async function convertProjectToSingleHost(host) {
 
   // Delete all host-specific files
   hosts.forEach(async function (host) {
-    await unlinkFileSafeAsync(`./manifest.${host}.xml`);
-    await unlinkFileSafeAsync(`./src/taskpane/${host}.ts`);
+    await unlinkFileAsync(`./manifest.${host}.xml`);
+    await unlinkFileAsync(`./src/taskpane/${host}.ts`);
   });
 
   // Delete test folder
@@ -156,23 +146,17 @@ function deleteFolder(folder) {
 }
 
 async function deleteSupportFiles() {
-  await unlinkFileSafeAsync("CONTRIBUTING.md");
-  await unlinkFileSafeAsync("LICENSE");
-  await unlinkFileSafeAsync("README.md");
-  await unlinkFileSafeAsync("SECURITY.md");
-  await unlinkFileSafeAsync("./convertToSingleHost.js");
-  await unlinkFileSafeAsync(".npmrc");
-  await unlinkFileSafeAsync("package-lock.json");
-}
-
-async function deleteJSONManifestRelatedFiles() {
-  await unlinkFileSafeAsync("manifest.json");
-  await unlinkFileSafeAsync("assets/color.png");
-  await unlinkFileSafeAsync("assets/outline.png");
+  await unlinkFileAsync("CONTRIBUTING.md");
+  await unlinkFileAsync("LICENSE");
+  await unlinkFileAsync("README.md");
+  await unlinkFileAsync("SECURITY.md");
+  await unlinkFileAsync("./convertToSingleHost.js");
+  await unlinkFileAsync(".npmrc");
+  await unlinkFileAsync("package-lock.json");
 }
 
 async function deleteXMLManifestRelatedFiles() {
-  await unlinkFileSafeAsync("manifest.xml");
+  await unlinkFileAsync("manifest.xml");
 }
 
 async function updatePackageJsonForXMLManifest() {
@@ -262,8 +246,7 @@ let manifestPath = "manifest.xml";
 
 if (host !== "outlook" || manifestType !== "json") {
 // Remove things that are only relevant to JSON manifest
-deleteJSONManifestRelatedFiles();
-updatePackageJsonForXMLManifest();
+  updatePackageJsonForXMLManifest();
 } else {
   manifestPath = "manifest.json";
   modifyProjectForJSONManifest().catch((err) => {
