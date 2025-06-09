@@ -155,6 +155,11 @@ async function deleteSupportFiles() {
   await unlinkFileAsync("package-lock.json");
 }
 
+async function deleteJSONManifestRelatedFiles() {
+  await unlinkFileAsync("assets/color.png");
+  await unlinkFileAsync("assets/outline.png");
+}
+
 async function deleteXMLManifestRelatedFiles() {
   await unlinkFileAsync("manifest.xml");
 }
@@ -246,6 +251,7 @@ let manifestPath = "manifest.xml";
 
 if (host !== "outlook" || manifestType !== "json") {
 // Remove things that are only relevant to JSON manifest
+  deleteJSONManifestRelatedFiles();
   updatePackageJsonForXMLManifest();
 } else {
   manifestPath = "manifest.json";
