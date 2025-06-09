@@ -43,6 +43,7 @@ async function modifyProjectForSingleHost(host) {
   if (!hosts.includes(host)) {
     throw new Error(`'${host}' is not a supported host.`);
   }
+
   await convertProjectToSingleHost(host);
   await updatePackageJsonForSingleHost(host);
   await updateLaunchJsonFile(host);
@@ -54,14 +55,13 @@ async function convertProjectToSingleHost(host) {
   await writeFileAsync(`./manifest.xml`, manifestContent);
 
   // Copy host-specific office-document.ts over src/office-document.ts
-  const hostName = getHostName(host);
-  const srcContent = await readFileAsync(`./src/taskpane/${hostName}.ts`, "utf8");
+  const srcContent = await readFileAsync(`./src/taskpane/${host}.ts`, "utf8");
   await writeFileAsync(`./src/taskpane/taskpane.ts`, srcContent);
 
   // Delete all host-specific files
   hosts.forEach(async function (host) {
     await unlinkFileAsync(`./manifest.${host}.xml`);
-    await unlinkFileAsync(`./src/taskpane/${getHostName(host)}.ts`);
+    await unlinkFileAsync(`./src/taskpane/${host}.ts`);
   });
 
   // Delete test folder
@@ -120,28 +120,10 @@ async function updateLaunchJsonFile(host) {
   const launchJsonContent = await readFileAsync(launchJson, "utf8");
   let content = JSON.parse(launchJsonContent);
   content.configurations = content.configurations.filter(function (config) {
-    return config.name.startsWith(getHostName(host));
+    return config.name.toLowerCase().startsWith(host);
   });
-  await writeFileAsync(launchJson, JSON.stringify(content, null, 2));
-}
 
-function getHostName(host) {
-  switch (host) {
-    case "excel":
-      return "Excel";
-    case "onenote":
-      return "OneNote";
-    case "outlook":
-      return "Outlook";
-    case "powerpoint":
-      return "PowerPoint";
-    case "project":
-      return "Project";
-    case "word":
-      return "Word";
-    default:
-      throw new Error(`'${host}' is not a supported host.`);
-  }
+  await writeFileAsync(launchJson, JSON.stringify(content, null, 2));
 }
 
 function deleteFolder(folder) {
@@ -174,7 +156,6 @@ async function deleteSupportFiles() {
 }
 
 async function deleteJSONManifestRelatedFiles() {
-  await unlinkFileAsync("manifest.json");
   await unlinkFileAsync("assets/color.png");
   await unlinkFileAsync("assets/outline.png");
 }
@@ -270,8 +251,8 @@ let manifestPath = "manifest.xml";
 
 if (host !== "outlook" || manifestType !== "json") {
 // Remove things that are only relevant to JSON manifest
-deleteJSONManifestRelatedFiles();
-updatePackageJsonForXMLManifest();
+  deleteJSONManifestRelatedFiles();
+  updatePackageJsonForXMLManifest();
 } else {
   manifestPath = "manifest.json";
   modifyProjectForJSONManifest().catch((err) => {
