@@ -52,9 +52,7 @@
         "run",
         "start",
         "--",
-        "desktop",
-        "--app",
-        "outlook"
+        "desktop"
       ],
       "presentation": {
         "clear": true,
