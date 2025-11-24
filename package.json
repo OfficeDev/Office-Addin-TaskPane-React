@@ -12,8 +12,8 @@
     "dev_server_port": 3000
   },
   "engines": {
-    "node": ">=16 <21",
-    "npm": ">=7 <11"
+    "node": ">=20 <25",
+    "npm": ">=9 <12"
   },
   "scripts": {
     "build": "webpack --mode production",
