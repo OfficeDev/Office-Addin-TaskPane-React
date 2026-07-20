@@ -17,7 +17,7 @@ const root = createRoot(rootElement);
 
 /* Render application after Office initializes */
 Office.onReady(async (info) => {
-  let testValues: any = [];
+  let testValues: any[] = [];
   try {
     const testServerResponse: { status?: number } = await pingTestServer(port);
     if (testServerResponse?.status === 200) {
