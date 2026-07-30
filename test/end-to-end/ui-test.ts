@@ -62,20 +62,20 @@ hosts.forEach(function (host) {
           }
 
           // Check if the taskpane reported an error
-          const errorResult = testValues.find((v: any) => v.resultName === "test-error");
+          const errorResult = testValues.find((value: any) => value.name === "test-error");
           if (errorResult) {
-            assert.fail(`[${host}] Taskpane reported error: ${errorResult.resultValue}`);
+            assert.fail(`[${host}] Taskpane reported error: ${errorResult.value}`);
           }
 
           // Filter out error entries for actual result validation
-          testValues = testValues.filter((v: any) => v.resultName !== "test-error");
+          testValues = testValues.filter((value: any) => value.name !== "test-error");
           assert.strictEqual(testValues.length > 0, true, `No test results received from ${host} add-in`);
         });
         it("Validate expected result name", async function () {
-          assert.strictEqual(testValues[0].resultName, "output-message");
+          assert.strictEqual(testValues[0].name, "output-message");
         });
         it("Validate expected result value", async function () {
-          assert.strictEqual(testValues[0].resultValue, testValues[0].expectedValue);
+          assert.strictEqual(testValues[0].value, testValues[0].expectedValue);
         });
       });
     after(`Teardown test environment and shutdown ${host}`, async function () {
